@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Rendang</title>
+    <link rel="stylesheet" href="CSS/style.css">
+    <link rel="stylesheet" href="CSS/pages.css">
+    <link rel="stylesheet" href="CSS/annoyingStyle.css">
+</head>
+<body>
+    <main class="card wide">
+        <h1>Kelola Produk</h1>
+        <form id="productForm" class="admin-form">
+            <input type="hidden" id="pid">
+            <input type="text" id="pname" placeholder="Nama rendang" required>
+            <input type="number" id="pprice" placeholder="Harga (Rp)" min="0" required>
+            <label class="file-label">
+                Foto produk (kosongkan jika tidak ingin mengganti)
+                <input type="file" id="pimg" accept="image/*">
+            </label>
+            <button type="submit" class="btn-add" id="saveBtn">Tambah produk</button>
+            <button type="button" class="btn-del" id="cancelBtn" style="display:none">Batal</button>
+        </form>
+        <table>
+            <thead><tr><th>Foto</th><th>Nama</th><th>Harga</th><th>Aksi</th></tr></thead>
+            <tbody id="productTable"></tbody>
+        </table>
+        <p class="alt"><a href="toko.html">Lihat toko</a> | <a href="#" id="logoutLink">Keluar</a></p>
+    </main>
+    <script src="JS/db.js"></script>
+    <script src="JS/auth.js"></script>
+    <script src="JS/admin.js"></script>
+</body>
+</html>

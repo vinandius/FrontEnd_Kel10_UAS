@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akun - Rendang</title>
+    <link rel="stylesheet" href="CSS/style.css">
+    <link rel="stylesheet" href="CSS/pages.css">
+    <link rel="stylesheet" href="CSS/annoyingStyle.css">
+</head>
+
+<body>
+    <main class="card">
+        <h1>Akun saya</h1>
+        <p>Nama: <strong id="accName"></strong></p>
+        <p>Email: <strong id="accEmail"></strong></p>
+        <p>Peran: <strong id="accRole"></strong></p>
+
+        <a href="admin.html" id="adminBtn" class="btn-add" style="display:none; text-decoration:none; display:none;">Kelola produk</a>
+        <button id="logoutBtn" class="btn-del">Log Out</button>
+
+        <p class="alt"><a href="toko.html">Kembali ke toko</a></p>
+    </main>
+    <script src="JS/db.js"></script>
+    <script src="JS/auth.js"></script>
+    <script>
+        const user = getCurrentUser();
+        if (!user) {
+            window.location.href = "login.html";
+        } else {
+            document.getElementById("accName").textContent = user.name;
+            document.getElementById("accEmail").textContent = user.email;
+            document.getElementById("accRole").textContent =
+                user.role === "admin" ? "Admin" : "Pembeli";
+
+            if (user.role === "admin") {
+                document.getElementById("adminBtn").style.display = "inline-block";
+            }
+
+            document.getElementById("logoutBtn").addEventListener("click", () => {
+                logout();
+                window.location.href = "toko.html";
+            });
+        }
+    </script>
+</body>
+</html>
