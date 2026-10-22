@@ -1,42 +1,47 @@
-<section id="character-section">
+import styles from "../../app/page.module.css";
 
-        <div className="character-heading">
-            <div className="section-label">06 · KARAKTER</div>
-            <h1> Tiga hal yang membentuk karakter rendang. </h1>
-        </div>
+export default function Info2() {
+    return(
+        <section id={styles["character-section"]}>
 
-
-        <div className="character-list">
-
-            <div className="character-item">
-                <span>01</span>
-
-                <div>
-                    <h2>Rempah</h2>
-                    <p> Memberikan aroma, warna, dan lapisan rasa. </p>
-                </div>
+            <div className={styles["character-heading"]}>
+                <div className={styles["section-label"]}>06 · KARAKTER</div>
+                <h1> Tiga hal yang membentuk karakter rendang. </h1>
             </div>
 
+            <div className={styles["character-list"]}>
 
-            <div className="character-item">
-                <span>02</span>
+                <div className={styles["character-item"]}>
+                    <span>01</span>
 
-                <div>
-                    <h2>Santan</h2>
-                    <p> Menjadi bagian penting dari dasar masakan  dan membantu membentuk tekstur bumbu. </p>
+                    <div>
+                        <h2>Rempah</h2>
+                        <p> Memberikan aroma, warna, dan lapisan rasa. </p>
+                    </div>
                 </div>
+
+
+                <div className={styles["character-item"]}>
+                    <span>02</span>
+
+                    <div>
+                        <h2>Santan</h2>
+                        <p> Menjadi bagian penting dari dasar masakan  dan membantu membentuk tekstur bumbu. </p>
+                    </div>
+                </div>
+
+
+                <div className={styles["character-item"]}>
+                    <span>03</span>
+
+                    <div>
+                        <h2>Waktu</h2>
+                        <p> Mengubah cairan, tekstur, warna, dan kekuatan rasa selama proses memasak. </p>
+                    </div>
+                </div>
+
             </div>
 
-
-            <div className="character-item">
-                <span>03</span>
-
-                <div>
-                    <h2>Waktu</h2>
-                    <p> Mengubah cairan, tekstur, warna, dan kekuatan rasa selama proses memasak. </p>
-                </div>
-            </div>
-
-        </div>
-
-    </section>
+        </section>
+    )
+}

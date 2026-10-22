@@ -1,14 +1,18 @@
-<section id="recipe-section">
+import styles from "../../app/page.module.css";
 
-        <div id="recipecont">
+export default function Resep() {
+    return(
+        <section id={styles["recipe-section"]}>
 
-            <div id="recipe">
+        <div id={styles["recipecont"]}>
 
-                <div className="section-label">
+            <div id={styles["recipe"]}>
+
+                <div className={styles["section-label"]}>
                     04 · BAHAN
                 </div>
 
-                <div className="recipe-heading">
+                <div className={styles["recipe-heading"]}>
                     <div>
                         <h1>Bukan cuma daging.</h1>
                         <h2>Karakter rendang dibangun dari rempah.</h2>
@@ -22,34 +26,34 @@
 
 
                 {/* <!-- Bahan --> */}
-                <div className="ingredient-area">
+                <div className={styles["ingredient-area"]}>
 
-                    <div className="ingredient-circle ingredient-cabai">
-                        <img src="Photos/cabe.png" alt="Cabai"/>
+                    <div className={`${styles["ingredient-circle"]} ${styles["ingredient-cabai"]}`}>
+                        <img src="/Photos/cabe.png" alt="Cabai"/>
                         <span>Cabai</span>
                     </div>
 
-                    <div className="ingredient-circle ingredient-jahe">
-                        <img src="Photos/jahe.png" alt="Jahe"/>
+                    <div className={`${styles["ingredient-circle"]} ${styles["ingredient-jahe"]}`}>
+                        <img src="/Photos/jahe.png" alt="Jahe"/>
                         <span>Jahe</span>
                     </div>
 
-                    <div className="ingredient-circle ingredient-lengkuas">
-                        <img src="Photos/lengkuas.png" alt="Lengkuas"/>
+                    <div className={`${styles["ingredient-circle"]} ${styles["ingredient-lengkuas"]}`}>
+                        <img src="/Photos/lengkuas.png" alt="Lengkuas"/>
                         <span>Lengkuas</span>
                     </div>
 
-                    <div className="ingredient-circle ingredient-santan">
-                        <img src="Photos/santan.png" alt="Santan"/>
+                    <div className={`${styles["ingredient-circle"]} ${styles["ingredient-santan"]}`}>
+                        <img src="/Photos/santan.png" alt="Santan"/>
                         <span>Santan</span>
                     </div>
 
-                    <div className="ingredient-circle ingredient-daun">
-                        <img src="Photos/daun.png" alt="Daun"/>
+                    <div className={`${styles["ingredient-circle"]} ${styles["ingredient-daun"]}`}>
+                        <img src="/Photos/daun.png" alt="Daun"/>
                         <span>Serai</span>
                     </div>
 
-                    <div className="ingredient-center">
+                    <div className={styles["ingredient-center"]}>
                         <span>RASA</span>
                         <strong>MINANG</strong>
                     </div>
@@ -57,42 +61,42 @@
                 </div>
 
 
-                <div className="recipe-content">
+                <div className={styles["recipe-content"]}>
 
-                    <div className="recipe-image">
-                        <img src="Photos/bumbu.png" alt="Bumbu dan rempah rendang"/>
+                    <div className={styles["recipe-image"]}>
+                        <img src="/Photos/bumbu.png" alt="Bumbu dan rempah rendang"/>
                     </div>
 
-                    <div className="recipe-text">
+                    <div className={styles["recipe-text"]}>
 
-                        <span className="recipe-small-title"> RASA YANG DIBANGUN BERSAMA </span>
+                        <span className={styles["recipe-small-title"]}> RASA YANG DIBANGUN BERSAMA </span>
                         <h2> Rempah, santan, dan waktu. </h2>
                         <p> Rendang menggunakan berbagai rempah yang menjadi bagian penting dari rasa dan aromanya. </p>
 
-                        <div className="ingredient-list">
-                            <div className="ingredient">
+                        <div className={styles["ingredient-list"]}>
+                            <div className={styles["ingredient"]}>
                                 <span>01</span>
                                 <strong>Daging</strong>
                             </div>
 
-                            <div className="ingredient">
+                            <div className={styles["ingredient"]}>
                                 <span>02</span>
                                 <strong>Santan</strong>
                             </div>
 
-                            <div className="ingredient">
+                            <div className={styles["ingredient"]}>
                                 <span>03</span>
                                 <strong>Cabai</strong>
                             </div>
 
-                            <div className="ingredient">
+                            <div className={styles["ingredient"]}>
                                 <span>04</span>
                                 <strong>Rempah</strong>
                             </div>
 
                         </div>
 
-                        <p className="ingredient-note"> Bumbu halus dapat meliputi bawang, cabai merah, jahe, kunyit, lengkuas, dan ketumbar. Rempah aromatiknya antara lain serai, daun salam, daun jeruk, dan daun kunyit.</p>
+                        <p className={styles["ingredient-note"]}> Bumbu halus dapat meliputi bawang, cabai merah, jahe, kunyit, lengkuas, dan ketumbar. Rempah aromatiknya antara lain serai, daun salam, daun jeruk, dan daun kunyit.</p>
 
                     </div>
 
@@ -103,3 +107,5 @@
         </div>
 
     </section>
+    )
+}

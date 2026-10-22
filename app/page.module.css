@@ -1891,6 +1891,14 @@
     transform: translateY(0);
 }
 
+@media (prefers-reduced-motion: reduce) {
+    .fade-scroll {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+}
+
 .ingredient-cabai {
     animation: floatCabai 6s ease-in-out infinite;
     top: 20px !important;
@@ -2112,4 +2120,3 @@ td .btn-add, td .btn-del {
     border-radius: 50%;
     object-fit: cover;
 }
-
