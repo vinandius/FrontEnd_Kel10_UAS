@@ -1,10 +1,10 @@
 import InfoPageLayout from "../../components/layout/info-page-layout";
-import Resep from "../../components/main/resep";
+import Info1 from "../../components/main/info1";
 
-export default function ResepPage() {
+export default function MaknaRendangPage() {
     return (
         <InfoPageLayout>
-            <Resep />
+            <Info1 />
         </InfoPageLayout>
     );
 }

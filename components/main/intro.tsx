@@ -1,5 +1,4 @@
 import styles from "../../app/page.module.css";
-import Navbar from "../layout/navbar";
 
 export default function Intro() {
     return(
@@ -9,9 +8,6 @@ export default function Intro() {
                 <h1>RENDANG</h1>
                 <p>Dari Minangkabau, Sumatera barat</p>
             </div>
-
-            <Navbar />
-    
 
             <div id={styles["hero-image"]}>
                 <img src="/Photos/rendang-hero.jpg" alt="Rendang" className={styles["hero-img"]}/>
