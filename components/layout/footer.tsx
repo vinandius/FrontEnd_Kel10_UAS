@@ -2,7 +2,7 @@ import styles from "../../app/page.module.css";
 
 export default function Footer() {
     return(
-        <footer id="contact">
+        <footer id="contact" className={styles["footer-section"]}>
             <h2> Contact</h2>
             <div className={styles["footer"]}>
                 <p>Kunjungi instagram kami!</p>

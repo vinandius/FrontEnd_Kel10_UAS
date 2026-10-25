@@ -9,6 +9,8 @@ export default function Intro() {
                 <h1>RENDANG</h1>
                 <p>Dari Minangkabau, Sumatera barat</p>
             </div>
+
+            <Navbar />
     
 
             <div id={styles["hero-image"]}>

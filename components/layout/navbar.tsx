@@ -11,9 +11,7 @@ export default function Navbar(){
                 <Link href="/proses">Proses</Link>
                 <Link href="/resep">Bahan</Link>
                 <Link href="/jenis-rendang">Jenis</Link>
-                <Link href={`/#${styles["closing-section"]}`}>
-                Contact
-                </Link>
+                <Link href={"/#contact"}>Contact</Link>
                 <Link href="/store">Toko</Link>
             </nav>
         </div>

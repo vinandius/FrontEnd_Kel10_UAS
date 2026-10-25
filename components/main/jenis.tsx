@@ -49,7 +49,12 @@ const rendangTypes = [
 
 export default function Jenis() {
     const [searchTerm, setSearchTerm] = useState("");
-    const filteredTypes = rendangTypes.filter((item)=> item.title.toLowerCase().includes(searchTerm.toLowerCase()));
+    const filteredTypes = rendangTypes.filter((item)=>{
+        const searchableText = `${item.title} ${item.description}`.toLowerCase();
+
+        return searchableText.includes(searchTerm.trim().toLowerCase());
+    });
+    
     return(
         <section id={styles["types-section"]}>
             <div id={styles["jendang"]}>
