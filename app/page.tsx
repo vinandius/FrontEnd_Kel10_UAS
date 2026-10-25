@@ -1,4 +1,3 @@
-import Image from "next/image";
 import styles from "./page.module.css";
 import Intro from "../components/main/intro";
 import Origin from "../components/main/origin";
@@ -9,8 +8,8 @@ import Info1 from "../components/main/info1";
 import Info2 from "../components/main/info2";
 import Jenis from "../components/main/jenis";
 import Closing from "../components/main/closing";
-import Footer from "../components/main/footer";
-import Scroll from "./scroll";
+import Footer from "../components/layout/footer";
+import Scroll from "../components/ui/scroll";
 
 export default function Home() {
   return (

@@ -21,7 +21,7 @@ export default function Info1() {
 
                                     <div>
                                         <h2>Marandang</h2>
-                                        <p> Istilah "marandang" merujuk pada proses memasak santan dan bumbu secara perlahan hingga mengering dan menyusut.</p>
+                                        <p> Istilah &quot;marandang&quot; merujuk pada proses memasak santan dan bumbu secara perlahan hingga mengering dan menyusut.</p>
                                     </div>
                                 </div>  
                             </div>
@@ -51,7 +51,7 @@ export default function Info1() {
                     <div className={styles["fact-text"]}>
                         <span className={styles["fact-number"]}>02</span>
                         <h2> Sebelum menjadi rendang, ada kalio. </h2>
-                        <p> Jika daging yang dimasak masih berwarna merah kecokelatan dan dimasak tidak sampai kering, masyarakat Minangkabau menyebutnya "Kalio". </p>
+                        <p> Jika daging yang dimasak masih berwarna merah kecokelatan dan dimasak tidak sampai kering, masyarakat Minangkabau menyebutnya &quot;Kalio&quot;. </p>
                     </div>
 
                     <div className={styles["fact-image"]}>
