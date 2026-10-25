@@ -1,6 +1,5 @@
-import Link from "next/link";
-
-import styles from "../../app/page.module.css"
+import styles from "../../app/page.module.css";
+import Navbar from "../layout/navbar";
 
 export default function Intro() {
     return(
@@ -11,18 +10,6 @@ export default function Intro() {
                 <p>Dari Minangkabau, Sumatera barat</p>
             </div>
     
-            <div id={styles["navigation"]}>
-                <nav>
-                    <a href="#header-hero">Home</a>
-                    <a href="#origin">Asal</a>
-                    <a href="#about">About</a>
-                    <a href="#process-section">Proses</a>
-                    <a href="#recipe-section">Bahan</a>
-                    <a href="#jendang">Jenis</a>
-                    <a href="#closing-section">Contact</a>
-                    <a href="toko.html">Toko</a>
-                </nav>
-            </div>
 
             <div id={styles["hero-image"]}>
                 <img src="/Photos/rendang-hero.jpg" alt="Rendang" className={styles["hero-img"]}/>

@@ -9,8 +9,8 @@ import Info1 from "../components/main/info1";
 import Info2 from "../components/main/info2";
 import Jenis from "../components/main/jenis";
 import Closing from "../components/main/closing";
-import Footer from "../components/main/footer";
-import Scroll from "./scroll";
+import Footer from "../components/layout/footer";
+import Scroll from "../components/ui/scroll";
 
 export default function Home() {
   return (
