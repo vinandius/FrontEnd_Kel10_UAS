@@ -73,6 +73,8 @@
 
 #navigation {
     width: 100%;
+    padding: 14px 20px;
+    background-color: var(--cream);
     z-index: 999;
 }
 
@@ -1249,6 +1251,13 @@
 
     #intro p {
         font-size: 13px;
+    }
+
+    #navigation {
+        position: sticky;
+        top: 0;
+        padding: 18px 40px;
+        box-shadow: 0 4px 15px rgba(53, 23, 13, 0.08);
     }
 
     #navigation nav {

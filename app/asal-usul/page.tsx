@@ -1,10 +1,10 @@
 import InfoPageLayout from "../../components/layout/info-page-layout";
-import Origin from "@/components/main/origin";
+import Origin from "../../components/main/origin";
 
-export default function AsalUsulPage(){
+export default function AsalUsulPage() {
     return (
-        <main>
+        <InfoPageLayout>
             <Origin />
-        </main>
+        </InfoPageLayout>
     );
 }

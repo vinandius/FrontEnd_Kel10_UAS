@@ -1,4 +1,4 @@
-import type { ReactNode} from "react";
+import type { ReactNode } from "react";
 import styles from "../../app/page.module.css";
 
 type RendangCardProps = {
