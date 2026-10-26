@@ -73,6 +73,8 @@
 
 #navigation {
     width: 100%;
+    padding: 14px 20px;
+    background-color: var(--cream);
     z-index: 999;
 }
 
@@ -1023,18 +1025,32 @@
     user-select: none;
 }
 
-.footer {
+.footer-section {
+    width: 100%;
+    padding: 55px 20px;
+    background-color: var(--brown-dark);
+    color: var(--cream);
+}
+
+.footer-section h2 {
+    margin-bottom: 25px;
+    color: var(--cream);
+    font-family: "Playfair Display", serif;
+    font-size: 38px;
+}
+
+.footer-section .footer {
     display: flex;
     flex-direction: column;
     gap: 18px;
 }
 
-.footer p {
+.footer-section .footer p {
     margin-bottom: 5px;
     color: var(--cream-dark);
     font-size: 13px;
-    user-select: none;
 }
+
 
 /*TABLET */
 @media (min-width: 768px) {
@@ -1181,10 +1197,10 @@
 
 
     /* FOOTER */
-    .footer {
+    .footer-section .footer {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 40px;
+        gap: 25px 40px;
     }
 
     /* toko */
@@ -1235,6 +1251,13 @@
 
     #intro p {
         font-size: 13px;
+    }
+
+    #navigation {
+        position: sticky;
+        top: 0;
+        padding: 18px 40px;
+        box-shadow: 0 4px 15px rgba(53, 23, 13, 0.08);
     }
 
     #navigation nav {
@@ -1538,6 +1561,9 @@
     }
 
     /* FOOTER */
+    .footer-section {
+        padding: 65px 7%;
+    }
     #contact {
         padding: 65px 7%;
     }
