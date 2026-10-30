@@ -10,7 +10,7 @@ const navLinks = [
   { href: "/", label: "Home" },
   { href: "#jendang", label: "Lists" },
   { href: "#contact", label: "Contact" },
-  { href: "/cart", label: "Keranjang" },
+  { href: "/store/cart", label: "Keranjang" },
 ];
 
 export default function TokoNav() {
@@ -26,8 +26,8 @@ export default function TokoNav() {
   const links = [
     ...navLinks,
     loggedIn
-      ? { href: "/acc", label: "Akun" }
-      : { href: "/login", label: "Login" },
+      ? { href: "/store/acc", label: "Akun" }
+      : { href: "/store/login", label: "Login" },
   ];
 
   return (

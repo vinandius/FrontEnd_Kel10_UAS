@@ -10,7 +10,7 @@ export default function AuthWarning({
       <div className="auth-warning-box">
         <h3>Akses Ditolak</h3>
         <p>{message}</p>
-        <Link href="/login" className="auth-warning-btn">
+        <Link href="/store/login" className="auth-warning-btn">
           Ke Halaman Login
         </Link>
       </div>
