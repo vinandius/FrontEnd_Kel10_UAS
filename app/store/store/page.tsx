@@ -10,6 +10,8 @@ import { addToCart } from "../../../lib/cart";
 import SafeImg from "../../../components/store/SafeImg";
 import AuthWarning from "../../../components/store/AuthWarning";
 import CartNotification, { NotifPos } from "../../../components/store/CartNotification";
+import TokoNav from "../../../components/store/TokoNav";
+
 
 export default function TokoPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -48,19 +50,7 @@ export default function TokoPage() {
           <h1>TOKO RENDANG</h1>
         </div>
 
-        <div id="navigation">
-          <nav>
-            <Link href="/">Home</Link>
-            <a href="#jendang">Lists</a>
-            <a href="#contact">Contact</a>
-            <Link href="/cart">Keranjang</Link>
-            {loggedIn ? (
-              <Link href="/acc">Akun</Link>
-            ) : (
-              <Link href="/login">Login</Link>
-            )}
-          </nav>
-        </div>
+        <TokoNav />
 
         <div id="hero-image">
           <img src="/Photos/rendang-hero.jpg" alt="Rendang" className="hero-img" />

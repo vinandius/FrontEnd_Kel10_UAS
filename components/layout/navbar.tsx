@@ -19,7 +19,8 @@ const navLinks = [
 
 export default function Navbar(){
     const pathname = usePathname();
-
+    if (pathname === "/store/store") return null;
+    
     return(
         <div id={styles["navigation"]}>
             <nav>
