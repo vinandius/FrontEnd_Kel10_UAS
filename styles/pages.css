@@ -1,0 +1,169 @@
+/* Gaya untuk halaman login, register, cart, admin. Pakai bersama style.css */
+.card {
+    max-width: 440px;
+    margin: 60px auto;
+    padding: 30px 35px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    box-sizing: border-box;
+    width: 90%;
+    user-select: none;
+}
+.card.wide {
+    max-width: 760px;
+    user-select: none;
+}
+
+.card h1 {
+    font-family: 'Playfair Display', serif;
+    margin-top: 0;
+}
+
+.card label {
+    display: block;
+    margin: 14px 0 6px;
+    font-weight: 500;
+    user-select: none;
+}
+
+.card input[type="text"],
+.card input[type="email"],
+.card input[type="password"],
+.card input[type="number"] {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 14px;
+    border: 2px solid #502910;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    color: #3b1d0c;
+    user-select: none;
+}
+
+.card input:focus {
+    outline: none;
+    border-color:
+    #d87d4a;
+}
+
+.msg {
+    color: #b00020;
+    min-height: 20px;
+    font-size: 14px;
+    user-select: none;
+}
+
+.alt {
+    margin-top: 20px;
+    font-size: 14px;
+    user-select: none;
+}
+
+.alt a {
+    color: #7b3313;
+}
+
+.card .btn-add {
+    margin-top: 10px;
+    user-select: none;
+}
+
+.btn-del {
+    background: #b00020;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    user-select: none;
+}
+
+/* Keranjang */
+.cart-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 0;
+    border-bottom: 1px solid #eaddcf;
+    flex-wrap: wrap;
+}
+
+.cart-row img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.cart-row .info {
+    flex: 1;
+    min-width: 140px;
+}
+
+.cart-row .info p {
+    margin: 2px 0;
+}
+
+.qty {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.qty button {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid #7b3313;
+    background: white;
+    cursor: pointer;
+}
+
+.total {
+    font-size: 18px;
+    text-align: right;
+    user-select: none;
+}
+
+/* Admin */
+.admin-form {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.admin-form input[type="text"] {
+    flex: 2;
+    min-width: 160px;
+}
+.admin-form input[type="number"] {
+    flex: 1;
+    min-width: 110px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    text-align: left;
+    padding: 10px 6px;
+    border-bottom: 1px solid #eaddcf;
+}
+
+td .btn-add, td .btn-del {
+    padding: 6px 12px;
+    font-size: 13px;
+    user-select: none;
+}
+
+.thumb {
+    width: 50px; height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
