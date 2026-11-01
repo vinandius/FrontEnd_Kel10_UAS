@@ -4,7 +4,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getCurrentUser } from "../../../lib/auth";
-import { getProducts, formatRupiah, Product } from "../../../lib/db";
+import { formatRupiah, Product } from "../../../lib/db";
 import {
   CartItem, getCart, saveCart, removeFromCart, getCartTotal,
 } from "../../../lib/cart";
@@ -18,10 +18,12 @@ export default function CartPage() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [total, setTotal] = useState(0);
 
-  function refresh() {
-    setProducts(getProducts());
+  async function refresh() {
+    const res = await fetch("/api/products");
+    const prods: Product[] = await res.json();
+    setProducts(prods);
     setCart(getCart());
-    setTotal(getCartTotal());
+    setTotal(getCartTotal(prods));
   }
 
   useEffect(() => {
@@ -46,7 +48,7 @@ export default function CartPage() {
 
   function handleCheckout() {
     if (getCart().length === 0) return alert("Keranjang masih kosong.");
-    alert("Pesanan berhasil dibuat! Total: " + formatRupiah(getCartTotal()));
+    alert("Pesanan berhasil dibuat! Total: " + formatRupiah(getCartTotal(products)));
     saveCart([]);
     refresh();
   }
