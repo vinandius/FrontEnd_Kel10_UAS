@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { getCurrentUser, logout } from "../../../lib/auth";
-import { getProducts, saveProducts, formatRupiah, Product } from "../../../lib/db";
+import { formatRupiah, Product } from "../../../lib/db";
 import { readImage } from "../../../lib/image";
 import SafeImg from "../../../components/store/SafeImg";
 
@@ -24,8 +24,10 @@ export default function AdminPage() {
       router.replace("/login");
       return;
     }
-    setProducts(getProducts());
     setAllowed(true);
+    fetch("/api/products")
+      .then((r) => r.json())
+      .then(setProducts);
   }, [router]);
 
   function resetForm() {
@@ -35,9 +37,12 @@ export default function AdminPage() {
     if (fileRef.current) fileRef.current.value = "";
   }
 
+  async function loadProducts() {
+    const res = await fetch("/api/products");
+    setProducts(await res.json());
+  }
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const list = getProducts();
     const trimmed = name.trim();
     const priceNum = Number(price);
     const file = fileRef.current?.files?.[0];
@@ -45,7 +50,7 @@ export default function AdminPage() {
     if (priceNum <= 0) return alert("Harga harus lebih dari 0.");
 
     if (editId !== null) {
-      const p = list.find((p) => p.id === editId)!;
+      const p = products.find((p) => p.id === editId)!;
       if (p.name === trimmed && p.price === priceNum && !file) {
         return alert("Tidak ada perubahan.");
       }
@@ -72,20 +77,17 @@ export default function AdminPage() {
       }
     }
 
-    if (editId !== null) {
-      const p = list.find((p) => p.id === editId)!;
-      p.name = trimmed;
-      p.price = priceNum;
-      if (img) p.img = img;
-    } else {
-      const newId = list.length ? Math.max(...list.map((p) => p.id)) + 1 : 1;
-      list.push({ id: newId, name: trimmed, price: priceNum, img: img || "/Photos/Rendang.jpg" });
-    }
-
-    if (saveProducts(list)) {
-      setProducts(list);
+    const res = await fetch(
+      editId !== null ? `/api/products/${editId}` : "/api/products",
+      {
+        method: editId !== null ? "PATCH" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: trimmed, price: priceNum, img }),
+      }
+    );
+    if (!res.ok) return alert("Gagal menyimpan produk.");
+      await loadProducts();
       resetForm();
-    }
   }
 
   function handleEdit(p: Product) {
@@ -94,11 +96,10 @@ export default function AdminPage() {
     setPrice(String(p.price));
   }
 
-  function handleDelete(id: number) {
+  async function handleDelete(id: number) {
     if (!confirm("Hapus produk ini?")) return;
-    const list = getProducts().filter((p) => p.id !== id);
-    saveProducts(list);
-    setProducts(list);
+    await fetch(`/api/products/${id}`, { method: "DELETE" });
+    await loadProducts();
   }
 
   if (!allowed) return null;
@@ -145,7 +146,7 @@ export default function AdminPage() {
       </table>
 
       <p className="alt">
-        <Link href="/store">Lihat toko</Link> |{" "}
+        <Link href="/store/store">Lihat toko</Link> |{" "}
         <a href="#" onClick={(e) => { e.preventDefault(); logout(); router.push("/store/login"); }}>
           Keluar
         </a>
