@@ -1,10 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
-/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { getProducts, formatRupiah, Product } from "../../../lib/db";
+import { formatRupiah, Product } from "../../../lib/db";
 import { getCurrentUser } from "../../../lib/auth";
 import { addToCart } from "../../../lib/cart";
 import SafeImg from "../../../components/store/SafeImg";
@@ -21,8 +20,9 @@ export default function TokoPage() {
   const [showWarning, setShowWarning] = useState(false);
 
   useEffect(() => {
-    setProducts(getProducts());
-    setLoggedIn(getCurrentUser() !== null);
+    fetch("/api/products")
+      .then((r) => r.json())
+      .then(setProducts);
   }, []);
 
   const list = products.filter((p) =>

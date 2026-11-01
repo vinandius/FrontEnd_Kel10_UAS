@@ -1,5 +1,5 @@
 import { getCurrentUser } from "./auth";
-import { getProducts } from "./db";
+import type { Product } from "./db";
 
 export type CartItem = { id: number; qty: number };
 
@@ -34,8 +34,7 @@ export function removeFromCart(id: number) {
   saveCart(getCart().filter((i) => i.id !== id));
 }
 
-export function getCartTotal(): number {
-  const products = getProducts();
+export function getCartTotal(products: Product[]): number {
   return getCart().reduce((sum, i) => {
     const p = products.find((p) => p.id === i.id);
     return sum + (p ? p.price * i.qty : 0);
