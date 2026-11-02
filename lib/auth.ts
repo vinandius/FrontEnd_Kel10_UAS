@@ -1,25 +1,43 @@
-import { getUsers, saveUsers, User } from "./db";
+import bcrypt from "bcryptjs";
+import { prisma } from "./prisma";
+import { setSessionCookie } from "./session";
+import type { Session } from "./roles";
 
-export function register(name: string, email: string, password: string): boolean {
-  const users = getUsers();
-  if (users.some((u) => u.email === email)) return false;
-  users.push({ name, email, password, role: "customer" });
-  saveUsers(users);
-  return true;
-}
+export async function POST(request: Request) {
+  const body = await request.json().catch(() => null);
+  const name = String(body.name ?? "").trim();
+  const email = String(body.email ?? "").trim().toLowerCase();
+  const password = String(body.password ?? "");
 
-export function login(email: string, password: string): boolean {
-  const user = getUsers().find((u) => u.email === email && u.password === password);
-  if (!user) return false;
-  localStorage.setItem("currentUser", JSON.stringify(user));
-  return true;
-}
+  if (!name || !email.includes("@") || password.length < 6) {
+    return Response.json(
+      {message: "Terjadi kesalahan"},
+      {status: 400}
+    )
+  }
 
-export function getCurrentUser(): User | null {
-  const raw = localStorage.getItem("currentUser");
-  return raw ? (JSON.parse(raw) as User) : null;
-}
+  const existUser = await prisma.user.findUnique({ where: { email } });
+  if (existUser) {
+    return Response.json({
+      message: "Email sudah digunakan"
+    }, {status: 400})
+  }
 
-export function logout() {
-  localStorage.removeItem("currentUser");
+  const user = await prisma.user.create({
+    data: {
+      name,
+      email,
+      password: await bcrypt.hash(password, 10), role: "customer"
+    }
+  });
+
+  const session: Session = {
+    userId: user.id,
+    name: user.name,
+    email: user.email,
+    role: "customer"
+  }
+  await setSessionCookie(session);
+
+  return Response.json({message: "Akun telah berhasil dibuat"}, {status: 201});
 }

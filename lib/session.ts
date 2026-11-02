@@ -1,15 +1,9 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
+import type { Session } from "./roles";
 
 export const cookieName = "token";
 const dayActive = 60 * 60 * 24 * 7;
-
-export type Session = {
-    userId: number;
-    name: string;
-    email: string;
-    role: "admin" | "customer";
-}
 
 function getKey() {
     const key = process.env.JWT_SECRET;
