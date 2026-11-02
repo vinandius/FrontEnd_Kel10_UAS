@@ -39,19 +39,3 @@ export function saveProducts(list: Product[]): boolean {
 export function formatRupiah(n: number): string {
   return "Rp " + n.toLocaleString("id-ID");
 }
-
-export function getUsers(): User[] {
-  const raw = localStorage.getItem("users");
-  if (!raw) {
-    const seed: User[] = [
-      { name: "Admin", email: "admin@rendang.com", password: "admin123", role: "admin" },
-    ];
-    localStorage.setItem("users", JSON.stringify(seed));
-    return seed;
-  }
-  return JSON.parse(raw) as User[];
-}
-
-export function saveUsers(users: User[]) {
-  localStorage.setItem("users", JSON.stringify(users));
-}
