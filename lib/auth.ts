@@ -1,25 +1,44 @@
-import { getUsers, saveUsers, User } from "./db";
+import { PrismaClient, User } from "@prisma/client";
+import bcrypt from "bcryptjs";
 
-export function register(name: string, email: string, password: string): boolean {
-  const users = getUsers();
-  if (users.some((u) => u.email === email)) return false;
-  users.push({ name, email, password, role: "customer" });
-  saveUsers(users);
-  return true;
+const prisma = new PrismaClient();
+const SALT_ROUNDS = 10;
+
+// 1. REGISTER: Hashes password and saves to Prisma DB
+export async function register(name: string, email: string, password: string): Promise<boolean> {
+  try {
+    const existingUser = await prisma.user.findUnique({ where: { email } });
+    if (existingUser) return false;
+
+    const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+
+    await prisma.user.create({
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+        role: "customer",
+      },
+    });
+
+    return true;
+  } catch (error) {
+    alert("Registration error");
+    return false;
+  }
 }
 
-export function login(email: string, password: string): boolean {
-  const user = getUsers().find((u) => u.email === email && u.password === password);
-  if (!user) return false;
-  localStorage.setItem("currentUser", JSON.stringify(user));
-  return true;
-}
+export async function login(email: string, password: string): Promise<User | null> {
+  try {
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) return null;
 
-export function getCurrentUser(): User | null {
-  const raw = localStorage.getItem("currentUser");
-  return raw ? (JSON.parse(raw) as User) : null;
-}
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) return null;
 
-export function logout() {
-  localStorage.removeItem("currentUser");
+    return user;
+  } catch (error) {
+    alert("Login error");
+    return null;
+  }
 }
