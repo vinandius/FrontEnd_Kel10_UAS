@@ -1,41 +1,34 @@
-import { getCurrentUser } from "./auth";
 import type { Product } from "./db";
+import type { CartItem } from "./types";
 
-export type CartItem = { id: number; qty: number };
+const json = {"Content-Type": "application/json"};
 
-function cartKey(): string | null {
-  const user = getCurrentUser();
-  return user ? "cart_" + user.email : null;
+export async function getCart(): Promise<CartItem[]> {
+  const res = await fetch("/api/cart");
+  return res.ok?res.json(): [];
 }
 
-export function getCart(): CartItem[] {
-  const key = cartKey();
-  if (!key) return [];
-  return JSON.parse(localStorage.getItem(key) || "[]") as CartItem[];
+export async function addToCart(id: number): Promise<boolean> {
+  const res = await fetch("/api/cart", { method: "POST", headers: { "Content-Type": "application/json"}, body: JSON.stringify({ productId: id })});
+  return res.ok;
 }
 
-export function saveCart(cart: CartItem[]) {
-  const key = cartKey();
-  if (key) localStorage.setItem(key, JSON.stringify(cart));
+export async function setQty(id: number, qty:number) {
+  await fetch("/api/cart", {
+    method: "PATCH", headers:json, body:JSON.stringify({ productId: id, qty}),
+  });
 }
 
-// return false kalau belum login
-export function addToCart(id: number): boolean {
-  if (!cartKey()) return false;
-  const cart = getCart();
-  const item = cart.find((i) => i.id === id);
-  if (item) item.qty++;
-  else cart.push({ id, qty: 1 });
-  saveCart(cart);
-  return true;
+export async function removeFromCart(id: number) {
+  await fetch(`/api/cart?productId=${id}`, { method:"DELETE" });
 }
 
-export function removeFromCart(id: number) {
-  saveCart(getCart().filter((i) => i.id !== id));
+export async function clearCart() {
+  await fetch("/api/cart", { method:"DELETE" });
 }
 
-export function getCartTotal(products: Product[]): number {
-  return getCart().reduce((sum, i) => {
+export function getCartTotal(cart: CartItem[], products: Product[]): number {
+  return cart.reduce((sum, i) => {
     const p = products.find((p) => p.id === i.id);
     return sum + (p ? p.price * i.qty : 0);
   }, 0);

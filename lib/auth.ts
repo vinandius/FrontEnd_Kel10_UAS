@@ -1,44 +1,26 @@
-import { PrismaClient, User } from "@prisma/client";
-import bcrypt from "bcryptjs";
+type Result = { ok: true } | { ok: false; message: string };
 
-const prisma = new PrismaClient();
-const SALT_ROUNDS = 10;
-
-// 1. REGISTER: Hashes password and saves to Prisma DB
-export async function register(name: string, email: string, password: string): Promise<boolean> {
+async function post(url: string, body: unknown): Promise<Result> {
   try {
-    const existingUser = await prisma.user.findUnique({ where: { email } });
-    if (existingUser) return false;
-
-    const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
-
-    await prisma.user.create({
-      data: {
-        name,
-        email,
-        password: hashedPassword,
-        role: "customer",
-      },
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
     });
-
-    return true;
-  } catch (error) {
-    alert("Registration error");
-    return false;
+    if (res.ok) return { ok: true };
+    const data = await res.json().catch(() => ({}));
+    return { ok: false, message: data.message ?? "Terjadi kesalahan." };
+  } catch {
+    return { ok: false, message: "Tidak dapat terhubung ke server." };
   }
 }
 
-export async function login(email: string, password: string): Promise<User | null> {
-  try {
-    const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) return null;
+export const login = (email: string, password: string) =>
+  post("/api/auth/login", { email, password });
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) return null;
+export const register = (name: string, email: string, password: string) =>
+  post("/api/auth/register", { name, email, password });
 
-    return user;
-  } catch (error) {
-    alert("Login error");
-    return null;
-  }
+export async function logout() {
+  await fetch("/api/auth/logout", { method: "POST" });
 }

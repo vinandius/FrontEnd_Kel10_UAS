@@ -4,31 +4,30 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { getCurrentUser, logout } from "../../../lib/auth";
+import { logout } from "../../../lib/auth";
 import { formatRupiah, Product } from "../../../lib/db";
 import { readImage } from "../../../lib/image";
 import SafeImg from "../../../components/store/SafeImg";
+import { useAuth } from "../../../components/store/AuthProvider";
 
 export default function AdminPage() {
   const router = useRouter();
   const fileRef = useRef<HTMLInputElement>(null);
-  const [allowed, setAllowed] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
   const [editId, setEditId] = useState<number | null>(null);
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
+  const { user, loading, refresh } = useAuth();
+  const allowed = user?.role === "admin";
 
   useEffect(() => {
-    const u = getCurrentUser();
-    if (!u || u.role !== "admin") {
-      router.replace("/login");
+    if (loading) return;
+    if (!user || user.role !== "admin") {
+      router.replace("/store/login");
       return;
     }
-    setAllowed(true);
-    fetch("/api/products")
-      .then((r) => r.json())
-      .then(setProducts);
-  }, [router]);
+    loadProducts();
+  }, [loading, user, router]);
 
   function resetForm() {
     setEditId(null);
@@ -41,6 +40,7 @@ export default function AdminPage() {
     const res = await fetch("/api/products");
     setProducts(await res.json());
   }
+  
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const trimmed = name.trim();
@@ -146,9 +146,9 @@ export default function AdminPage() {
       </table>
 
       <p className="alt">
-        <Link href="/store/store">Lihat toko</Link> |{" "}
-        <a href="#" onClick={(e) => { e.preventDefault(); logout(); router.push("/store/login"); }}>
-          Keluar
+        <Link href="/store/store">Kembali ke toko</Link> |{" "}
+        <a href="#" onClick={ async (e) => { e.preventDefault(); await logout(); await refresh(); router.push("/store/login"); }}>
+          Keluar (log out)
         </a>
       </p>
     </main>
