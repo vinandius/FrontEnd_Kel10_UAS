@@ -6,9 +6,11 @@ export type NotifPos = { left?: number; top?: number };
 
 export default function CartNotification({
   pos,
+  message,
   onClose,
 }: {
   pos: NotifPos;
+  message: string;
   onClose: () => void;
 }) {
   useEffect(() => {
@@ -18,7 +20,7 @@ export default function CartNotification({
 
   return (
     <div className="cart-notification" style={pos}>
-      <span>Berhasil ditambahkan ke keranjang!</span>
+      <span>{message}</span>
       <button className="notif-close" onClick={onClose}>
         &times;
       </button>

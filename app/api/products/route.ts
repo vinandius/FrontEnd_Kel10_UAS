@@ -1,7 +1,10 @@
 import { prisma } from "../../../lib/prisma";
 import {getSession} from "../../../lib/session";
+import {getSiteSettings} from "../../../lib/content";
 
 type Context = { params: Promise<{id: string }> }
+
+const fallback = (await getSiteSettings()).fallbackImage?.url ?? "";
 
 export async function GET() {
   const products = await prisma.product.findMany({ orderBy: { id: "asc" } });
@@ -36,7 +39,7 @@ export async function POST(request: Request) {
     data: {
       name: name.trim(),
       price: Number(price),
-      img: img || "/Photos/Rendang.jpg",
+      img: img || fallback,
     },
   });
   return Response.json(product, { status: 201 });

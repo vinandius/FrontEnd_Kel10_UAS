@@ -1,20 +1,25 @@
 import styles from "../../app/page.module.css";
+import { getHero } from "../../lib/content";
 
-export default function Intro() {
+export default async function Intro() {
+    const hero = await getHero("home");
+
     return(
         <section id={styles["header-hero"]}>
             <div id={styles["intro"]}>
-                <p className={styles["eyebrow"]}>WARISAN KULINER NUSANTARA</p>
-                <h1>RENDANG</h1>
-                <p>Dari Minangkabau, Sumatera barat</p>
+                {hero.eyebrow && <p className={styles["eyebrow"]}>{hero.eyebrow}</p>}
+                <h1>{hero.title}</h1>
+                {hero.subtitle && <p>{hero.subtitle}</p>}
             </div>
 
             <div id={styles["hero-image"]}>
-                <img src="/Photos/rendang-hero.jpg" alt="Rendang" className={styles["hero-img"]}/>
-                <div className={styles["hero-text"]}>
-                    <span>MINANGKABAU</span>
-                    <strong>Rasa yang lahir dari waktu ke waktu.</strong>
-                </div>
+                <img src={hero.image.url} alt={hero.image.alt} className={styles["hero-img"]}/>
+                {(hero.badge || hero.tagline) && (
+                    <div className={styles["hero-text"]}>
+                        {hero.badge && <span>{hero.badge}</span>}
+                        {hero.tagline && <strong>{hero.tagline}</strong>}
+                    </div>
+                )}
             </div>
         </section>
     )

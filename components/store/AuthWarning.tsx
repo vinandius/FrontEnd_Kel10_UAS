@@ -1,17 +1,15 @@
 import Link from "next/link";
 
-export default function AuthWarning({
-  message = "Silakan masuk (login) terlebih dahulu untuk melanjutkan.",
-}: {
-  message?: string;
-}) {
+type AuthWarningProps = { title: string; message: string; buttonLabel: string };
+
+export default function AuthWarning({ title, message, buttonLabel }: AuthWarningProps) {
   return (
     <div className="auth-warning-overlay">
       <div className="auth-warning-box">
-        <h3>Akses Ditolak</h3>
+        <h3>{title}</h3>
         <p>{message}</p>
         <Link href="/store/login" className="auth-warning-btn">
-          Ke Halaman Login
+          {buttonLabel}
         </Link>
       </div>
     </div>

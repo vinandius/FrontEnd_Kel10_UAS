@@ -1,108 +1,26 @@
-/* eslint-disable @next/next/no-img-element */
-"use client";
+import StoreFront from "../../../components/store/StoreFront";
+import {
+  getFooterData, getHero, getNavLinks, getProducts, getSiteSettings, getTexts,
+} from "../../../lib/content";
 
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import { formatRupiah, Product } from "../../../lib/db";
-import { addToCart } from "../../../lib/cart";
-import SafeImg from "../../../components/store/SafeImg";
-import AuthWarning from "../../../components/store/AuthWarning";
-import CartNotification, { NotifPos } from "../../../components/store/CartNotification";
-import TokoNav from "../../../components/store/TokoNav";
-
-
-export default function TokoPage() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [keyword, setKeyword] = useState("");
-  const [notif, setNotif] = useState<NotifPos | null>(null);
-  const [showWarning, setShowWarning] = useState(false);
-
-  useEffect(() => {
-    fetch("/api/products")
-      .then((r) => r.json())
-      .then(setProducts);
-  }, []);
-
-  const list = products.filter((p) =>
-    p.name.toLowerCase().includes(keyword.toLowerCase())
-  );
-
-  async function handleAdd(e: React.MouseEvent<HTMLButtonElement>, id: number) {
-    const btn = e.currentTarget;
-    const ok = await addToCart(id);
-    if (!ok) {
-      setShowWarning(true);
-      return;
-    }
-    const pos: NotifPos = {};
-    if (window.innerWidth >= 1024) {
-      const r = btn.getBoundingClientRect();
-      pos.left = r.right + window.scrollX + 15;
-      pos.top = r.top + window.scrollY + r.height / 2;
-    }
-    setNotif(pos);
-  }
+export default async function TokoPage() {
+  const [hero, navLinks, texts, footer, settings, products] = await Promise.all([
+    getHero("store"),
+    getNavLinks("store"),
+    getTexts("store"),
+    getFooterData(),
+    getSiteSettings(),
+    getProducts(),
+  ]);
 
   return (
-    <>
-      <section id="header-hero">
-        <div id="intro">
-          <h1>TOKO RENDANG</h1>
-        </div>
-
-        <TokoNav />
-
-        <div id="hero-image">
-          <img src="/Photos/rendang-hero.jpg" alt="Rendang" className="hero-img" />
-        </div>
-      </section>
-
-      <section>
-        <div id="jendang">
-          <h1 className="section-title1">Jenis Rendang</h1>
-          <div className="search-container">
-            <input
-              type="text"
-              className="search-input"
-              placeholder="Cari jenis rendang"
-              value={keyword}
-              onChange={(e) => setKeyword(e.target.value)}
-            />
-          </div>
-
-          <div id="renlistcontToko">
-            {list.length === 0 ? (
-              <p>Rendang tidak ditemukan.</p>
-            ) : (
-              list.map((p) => (
-                <div className="renlist" key={p.id}>
-                  <SafeImg src={p.img} alt={p.name} />
-                  <div>
-                    <p>{p.name}</p>
-                    <p>{formatRupiah(p.price)}</p>
-                    <button className="btn-add" onClick={(e) => handleAdd(e, p.id)}>
-                      + Keranjang
-                    </button>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-      </section>
-
-      <footer id="contact">
-        <h2>Contact</h2>
-        <div className="footer">
-          <p>Kunjungi instagram kami!</p>
-          <p>Kritik dan saran? Silakan hubungi email kami: example@email.com</p>
-        </div>
-      </footer>
-
-      {notif && <CartNotification pos={notif} onClose={() => setNotif(null)} />}
-      {showWarning && (
-        <AuthWarning message="Silakan masuk (login) terlebih dahulu untuk menambahkan ke keranjang." />
-      )}
-    </>
+    <StoreFront
+      hero={{ title: hero.title, imageUrl: hero.image.url, imageAlt: hero.image.alt }}
+      navLinks={navLinks}
+      products={products}
+      texts={texts}
+      footer={footer}
+      fallbackImage={settings.fallbackImage?.url ?? ""}
+    />
   );
 }
