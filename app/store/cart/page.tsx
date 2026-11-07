@@ -3,57 +3,51 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { getCurrentUser } from "../../../lib/auth";
 import { formatRupiah, Product } from "../../../lib/db";
-import {
-  CartItem, getCart, saveCart, removeFromCart, getCartTotal,
-} from "../../../lib/cart";
+import { getCart, setQty, removeFromCart, clearCart, getCartTotal} from "../../../lib/cart";
 import SafeImg from "../../../components/store/SafeImg";
 import AuthWarning from "../../../components/store/AuthWarning";
+import { useAuth } from "@/components/store/AuthProvider";
+import { CartItem } from "../../../lib/types";
 
 export default function CartPage() {
-  const [ready, setReady] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [products, setProducts] = useState<Product[]>([]);
-  const [cart, setCart] = useState<CartItem[]>([]);
-  const [total, setTotal] = useState(0);
+  const { user, loading } = useAuth();
+  const [ products, setProducts ] = useState<Product[]>([]);
+  const [ cart, setCart ] = useState<CartItem[]>([]);
+  const [ total, setTotal] = useState(0);
 
   async function refresh() {
-    const res = await fetch("/api/products");
+    const [res, c] = await Promise.all([fetch("/api/products"), getCart()]);
     const prods: Product[] = await res.json();
     setProducts(prods);
-    setCart(getCart());
-    setTotal(getCartTotal(prods));
+    setCart(c);
+    setTotal(getCartTotal(c, prods));
   }
 
   useEffect(() => {
-    setLoggedIn(getCurrentUser() !== null);
-    refresh();
-    setReady(true);
-  }, []);
+    if (!loading && user) refresh();
+  }, [loading, user]);
 
-  function changeQty(id: number, delta: number) {
-    const c = getCart();
-    const item = c.find((i) => i.id === id);
+  async function changeQty(id: number, delta: number) {
+    const item = cart.find((i) => i.id === id);
     if (!item) return;
-    item.qty = Math.max(1, item.qty + delta);
-    saveCart(c);
-    refresh();
+    await setQty(id, Math.max(1, item.qty + delta));
+    await refresh();
   }
 
-  function handleDelete(id: number) {
-    removeFromCart(id);
-    refresh();
+  async function handleDelete(id: number) {
+    await removeFromCart(id);
+    await refresh();
   }
 
-  function handleCheckout() {
-    if (getCart().length === 0) return alert("Keranjang masih kosong.");
-    alert("Pesanan berhasil dibuat! Total: " + formatRupiah(getCartTotal(products)));
-    saveCart([]);
-    refresh();
+  async function handleCheckout() {
+    if (cart.length === 0) return alert("Keranjang masih kosong.");
+    alert("Pesanan berhasil dibuat! Total: " + formatRupiah(total));
+    await clearCart();
+    await refresh();
   }
 
-  if (!ready) return null;
+  if (loading) return null;
 
   return (
     <main className="card wide">
@@ -87,7 +81,7 @@ export default function CartPage() {
       <button className="btn-add" onClick={handleCheckout}>Checkout</button>
       <p className="alt"><Link href="/store/store">Lanjut belanja</Link></p>
 
-      {!loggedIn && (
+      {!user && (
         <AuthWarning message="Silakan masuk (login) terlebih dahulu untuk melihat keranjang belanja Anda." />
       )}
     </main>

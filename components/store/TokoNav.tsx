@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { getCurrentUser } from "../../lib/auth";
 import styles from "../../app/page.module.css";
+import { useAuth } from "./AuthProvider";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -15,13 +15,8 @@ const navLinks = [
 
 export default function TokoNav() {
   const pathname = usePathname();
-  const [loggedIn, setLoggedIn] = useState(false);
-
-  useEffect(() => {
-    /* eslint-disable react-hooks/set-state-in-effect */
-    setLoggedIn(getCurrentUser() !== null);
-    /* eslint-enable react-hooks/set-state-in-effect */
-  }, []);
+  const { user } = useAuth();
+  const loggedIn = user !== null;
 
   const links = [
     ...navLinks,

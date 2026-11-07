@@ -4,7 +4,6 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { formatRupiah, Product } from "../../../lib/db";
-import { getCurrentUser } from "../../../lib/auth";
 import { addToCart } from "../../../lib/cart";
 import SafeImg from "../../../components/store/SafeImg";
 import AuthWarning from "../../../components/store/AuthWarning";
@@ -15,7 +14,6 @@ import TokoNav from "../../../components/store/TokoNav";
 export default function TokoPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [keyword, setKeyword] = useState("");
-  const [loggedIn, setLoggedIn] = useState(false);
   const [notif, setNotif] = useState<NotifPos | null>(null);
   const [showWarning, setShowWarning] = useState(false);
 
@@ -29,14 +27,16 @@ export default function TokoPage() {
     p.name.toLowerCase().includes(keyword.toLowerCase())
   );
 
-  function handleAdd(e: React.MouseEvent<HTMLButtonElement>, id: number) {
-    if (!addToCart(id)) {
+  async function handleAdd(e: React.MouseEvent<HTMLButtonElement>, id: number) {
+    const btn = e.currentTarget;
+    const ok = await addToCart(id);
+    if (!ok) {
       setShowWarning(true);
       return;
     }
     const pos: NotifPos = {};
     if (window.innerWidth >= 1024) {
-      const r = e.currentTarget.getBoundingClientRect();
+      const r = btn.getBoundingClientRect();
       pos.left = r.right + window.scrollX + 15;
       pos.top = r.top + window.scrollY + r.height / 2;
     }

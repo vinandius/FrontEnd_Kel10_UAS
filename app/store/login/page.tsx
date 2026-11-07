@@ -4,19 +4,23 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { login } from "../../../lib/auth";
+import { useAuth } from "@/components/store/AuthProvider";
 
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [msg, setMsg] = useState("");
+  const { refresh } = useAuth();
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!login(email.trim(), password)) {
-      setMsg("Email atau password salah.");
+    const res = await login(email.trim(), password);
+    if (!res.ok) {
+      setMsg(res.message);
       return;
     }
+    await refresh();
     router.push("/store/store");
   }
 
