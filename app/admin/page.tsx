@@ -1,0 +1,157 @@
+/* eslint-disable react-hooks/set-state-in-effect */
+"use client";
+
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { logout } from "../../lib/auth";
+import { formatRupiah, Product } from "../../lib/db";
+import { readImage } from "../../lib/image";
+import SafeImg from "../../components/store/SafeImg";
+import { useAuth } from "../../components/store/AuthProvider";
+
+export default function AdminPage() {
+  const router = useRouter();
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [editId, setEditId] = useState<number | null>(null);
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState("");
+  const { user, loading, refresh } = useAuth();
+  const allowed = user?.role === "admin";
+
+  useEffect(() => {
+    if (loading) return;
+    if (!user || user.role !== "admin") {
+      router.replace("/store/login");
+      return;
+    }
+    loadProducts();
+  }, [loading, user, router]);
+
+  function resetForm() {
+    setEditId(null);
+    setName("");
+    setPrice("");
+    if (fileRef.current) fileRef.current.value = "";
+  }
+
+  async function loadProducts() {
+    const res = await fetch("/api/products");
+    
+    setProducts(await res.json());
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const trimmed = name.trim();
+    const priceNum = Number(price);
+    const file = fileRef.current?.files?.[0];
+
+    if (priceNum <= 0) return alert("Harga harus lebih dari 0.");
+
+    if (editId !== null) {
+      const p = products.find((p) => p.id === editId)!;
+      if (p.name === trimmed && p.price === priceNum && !file) {
+        return alert("Tidak ada perubahan.");
+      }
+      let pesan =
+        "Simpan perubahan?\n\n" +
+        "Nama: " + p.name + " -> " + trimmed + "\n" +
+        "Harga: " + formatRupiah(p.price) + " -> " + formatRupiah(priceNum) +
+        (file ? "\nFoto: diganti" : "");
+      const rasio = priceNum / p.price;
+      if (rasio < 0.5 || rasio > 2) {
+        pesan += "\n\nPERHATIAN: harga berubah drastis. Pastikan angkanya sudah benar.";
+      }
+      if (!confirm(pesan)) return;
+    } else if (!confirm('Tambah produk "' + trimmed + '" dengan harga ' + formatRupiah(priceNum) + "?")) {
+      return;
+    }
+
+    let img: string | null = null;
+    if (file) {
+      try {
+        img = await readImage(file);
+      } catch {
+        return alert("File yang dipilih bukan gambar yang valid.");
+      }
+    }
+
+    const res = await fetch(
+      editId !== null ? `/api/products/${editId}` : "/api/products",
+      {
+        method: editId !== null ? "PATCH" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: trimmed, price: priceNum, img }),
+      }
+    );
+    if (!res.ok) return alert("Gagal menyimpan produk.");
+      await loadProducts();
+      resetForm();
+  }
+
+  function handleEdit(p: Product) {
+    setEditId(p.id);
+    setName(p.name);
+    setPrice(String(p.price));
+  }
+
+  async function handleDelete(id: number) {
+    if (!confirm("Hapus produk ini?")) return;
+    await fetch(`/api/products/${id}`, { method: "DELETE" });
+    await loadProducts();
+  }
+
+  if (!allowed) return null;
+
+  return (
+    <main className="card wide">
+      <h1>Kelola Produk</h1>
+      <form className="admin-form" onSubmit={handleSubmit}>
+        <input type="text" placeholder="Nama rendang" required value={name}
+          onChange={(e) => setName(e.target.value)} />
+        <input type="number" placeholder="Harga (Rp)" min={0} required value={price}
+          onChange={(e) => setPrice(e.target.value)} />
+        <label className="file-label">
+          Foto produk (kosongkan jika tidak ingin mengganti)
+          <input type="file" accept="image/*" ref={fileRef} />
+        </label>
+        <button type="submit" className="btn-add" id="saveBtn">
+          {editId !== null ? "Simpan perubahan" : "Tambah produk"}
+        </button>
+        {editId !== null && (
+          <button type="button" className="btn-del" id="cancelBtn" onClick={resetForm}>
+            Batal
+          </button>
+        )}
+      </form>
+
+      <table>
+        <thead>
+          <tr><th>Foto</th><th>Nama</th><th>Harga</th><th>Aksi</th></tr>
+        </thead>
+        <tbody>
+          {products.map((p) => (
+            <tr key={p.id}>
+              <td><SafeImg src={p.img} className="thumb" /></td>
+              <td>{p.name}</td>
+              <td>{formatRupiah(p.price)}</td>
+              <td>
+                <button className="btn-add" onClick={() => handleEdit(p)}>Edit</button>
+                <button className="btn-del" onClick={() => handleDelete(p.id)}>Hapus</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <p className="alt">
+        <Link href="/store/store">Kembali ke toko</Link> |{" "}
+        <a href="#" onClick={ async (e) => { e.preventDefault(); await logout(); await refresh(); router.push("/store/login"); }}>
+          Keluar (log out)
+        </a>
+      </p>
+    </main>
+  );
+}
