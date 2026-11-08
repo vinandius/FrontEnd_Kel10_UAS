@@ -2,6 +2,7 @@ import Link from "next/link";
 import styles from "../../app/page.module.css";
 import { getSection, getTexts } from "../../lib/content";
 import { sectionLabel, tx } from "../../lib/format";
+import BackToTop from "../closing/backToTop";
 
 export default async function Closing() {
     const [section, t] = await Promise.all([getSection("closing"), getTexts("closing")]);
@@ -15,9 +16,7 @@ export default async function Closing() {
                 </div>
                 <h1>{section.title}</h1>
                 {section.description && <p>{section.description}</p>}
-                <Link href={`#${styles["header-hero"]}`}>
-                    {tx(t, "closing.backToTop")}
-                </Link>
+                <BackToTop label={tx(t, "closing.backToTop")} />
             </div>
 
         </section>

@@ -14,7 +14,6 @@ export default async function Jenis() {
         <section id={styles["types-section"]}>
             <div id={styles["jendang"]}>
 
-                <div className={styles["section-label"]}> {sectionLabel(section)}</div>
                 <h1> {section.title}</h1>
 
                 {section.description && (

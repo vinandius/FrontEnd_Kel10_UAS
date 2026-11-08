@@ -11,7 +11,6 @@ export default async function Info1() {
         <section id={styles["culture-section"]} className={styles["editorial-section"]}>
 
             <div className={styles["section-header"]}>
-                <p className={styles["section-number"]}>{sectionLabel(section)}</p>
                 <h2>{section.title}</h2>
             </div>
 
