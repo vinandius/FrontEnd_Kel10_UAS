@@ -35,13 +35,13 @@ export default function AccPage() {
         className="btn-del"
         onClick={() => {
           logout();
-          router.push("/store/store");
+          router.push("/store");
         }}
       >
         Log Out
       </button>
 
-      <p className="alt"><Link href="/store/store">Kembali ke toko</Link></p>
+      <p className="alt"><Link href="/store">Kembali ke toko</Link></p>
     </main>
   );
 }

@@ -3,13 +3,13 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { formatRupiah, Product } from "../../../lib/db";
-import { getCurrentUser } from "../../../lib/auth";
-import { addToCart } from "../../../lib/cart";
-import SafeImg from "../../../components/store/SafeImg";
-import AuthWarning from "../../../components/store/AuthWarning";
-import CartNotification, { NotifPos } from "../../../components/store/CartNotification";
-import TokoNav from "../../../components/store/TokoNav";
+import { formatRupiah, Product } from "../../lib/db";
+import { getCurrentUser } from "../../lib/auth";
+import { addToCart } from "../../lib/cart";
+import SafeImg from "../../components/store/SafeImg";
+import AuthWarning from "../../components/store/AuthWarning";
+import CartNotification, { NotifPos } from "../../components/store/CartNotification";
+import TokoNav from "../../components/store/TokoNav";
 
 
 export default function TokoPage() {

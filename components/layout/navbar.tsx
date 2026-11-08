@@ -14,12 +14,14 @@ const navLinks = [
     {href: "/home/karakter-rendang", label: "Karakter"},
     {href: "/home/jenis-rendang", label: "Jenis"},
     {href: "/#contact", label: "Contact"},
-    {href: "/store/store", label: "Toko"},
+    {href: "/store", label: "Toko"},
 ];
 
 export default function Navbar(){
     const pathname = usePathname();
-    if (pathname.startsWith("/store/")) return null;
+    if (pathname === "/store" || pathname.startsWith("/store/")) {
+        return null;
+    }
     
     return(
         <div id={styles["navigation"]}>

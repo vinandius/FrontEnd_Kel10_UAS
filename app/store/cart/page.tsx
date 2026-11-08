@@ -85,7 +85,7 @@ export default function CartPage() {
       </div>
       <p className="total">Total: <strong>{formatRupiah(total)}</strong></p>
       <button className="btn-add" onClick={handleCheckout}>Checkout</button>
-      <p className="alt"><Link href="/store/store">Lanjut belanja</Link></p>
+      <p className="alt"><Link href="/store">Lanjut belanja</Link></p>
 
       {!loggedIn && (
         <AuthWarning message="Silakan masuk (login) terlebih dahulu untuk melihat keranjang belanja Anda." />

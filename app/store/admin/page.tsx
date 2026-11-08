@@ -146,7 +146,7 @@ export default function AdminPage() {
       </table>
 
       <p className="alt">
-        <Link href="/store/store">Lihat toko</Link> |{" "}
+        <Link href="/store">Lihat toko</Link> |{" "}
         <a href="#" onClick={(e) => { e.preventDefault(); logout(); router.push("/store/login"); }}>
           Keluar
         </a>
