@@ -2,37 +2,29 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
 import styles from "../../app/page.module.css";
+import type { NavItem } from "../../lib/types";
 import { useAuth } from "./AuthProvider";
 
-const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "#jendang", label: "Lists" },
-  { href: "#contact", label: "Contact" },
-  { href: "/store/cart", label: "Keranjang" },
-];
-
-export default function TokoNav() {
+export default function TokoNav({ links }: { links: NavItem[] }) {
   const pathname = usePathname();
   const { user } = useAuth();
   const loggedIn = user !== null;
 
-  const links = [
-    ...navLinks,
-    loggedIn
-      ? { href: "/store/acc", label: "Akun" }
-      : { href: "/store/login", label: "Login" },
-  ];
+  const visibleLinks = links.filter((item) => {
+    if (item.visibility === "member") return loggedIn;
+    if (item.visibility === "guest") return !loggedIn;
+    return true;
+  });
 
   return (
     <div id={styles["navigation"]}>
       <nav>
-        {links.map((item) => (
+        {visibleLinks.map((item) => (
           <Link
-            key={item.href}
-            href={item.href}
-            className={pathname === item.href ? styles["active"] : undefined}
+            key={item.id}
+            href={item.path}
+            className={pathname === item.path ? styles["active"] : undefined}
           >
             {item.label}
           </Link>

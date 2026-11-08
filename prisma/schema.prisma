@@ -7,6 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// user
 model User {
   id       Int        @id @default(autoincrement())
   name     String
@@ -16,6 +17,138 @@ model User {
   cart     CartItem[]
 }
 
+// gambar
+model Media {
+  id           Int           @id @default(autoincrement())
+  url          String        @unique
+  alt          String
+  heroes       Hero[]
+  sections     Section[]
+  sectionItems SectionItem[]
+  rendangTypes RendangType[]
+  socialIcons  SocialLink[]
+  siteSettings SiteSetting[]
+}
+
+// setting
+model SiteSetting {
+  id              Int    @id @default(1)
+  metaTitle       String
+  metaDescription String
+  language        String @default("id")
+  contactHeading  String
+  socialPrompt    String
+  feedbackPrompt  String
+  contactEmail    String
+  fallbackImageId Int?
+  fallbackImage   Media? @relation(fields: [fallbackImageId], references: [id], onDelete: SetNull)
+}
+
+model SiteText {
+  id          Int     @id @default(autoincrement())
+  key         String  @unique
+  value       String
+  group       String
+  description String?
+
+  @@index([group])
+}
+
+model NavLink {
+  id         Int     @id @default(autoincrement())
+  menu       String // "main" | "store"
+  label      String
+  path       String
+  visibility String  @default("all") // "all" | "guest" | "member"
+  position   Int
+  isActive   Boolean @default(true)
+
+  @@index([menu, position])
+}
+
+model SocialLink {
+  id       Int     @id @default(autoincrement())
+  platform String
+  label    String
+  url      String
+  iconId   Int?
+  icon     Media?  @relation(fields: [iconId], references: [id], onDelete: SetNull)
+  position Int
+  isActive Boolean @default(true)
+
+  @@index([position])
+}
+
+// Main Page
+model Hero {
+  id       Int     @id @default(autoincrement())
+  page     String  @unique                            // "home" | "store"
+  eyebrow  String?
+  title    String
+  subtitle String?
+  badge    String?
+  tagline  String?
+  imageId  Int
+  image    Media   @relation(fields: [imageId], references: [id])
+}
+
+model Section {
+  id          Int     @id @default(autoincrement())
+  key         String  @unique
+  position    Int
+  label       String
+  title       String
+  subtitle    String?
+  description String?
+  imageId     Int?
+  image       Media?  @relation(fields: [imageId], references: [id], onDelete: SetNull)
+  isVisible   Boolean @default(true)
+
+  paragraphs SectionParagraph[]
+  items      SectionItem[]
+
+  @@index([position])
+}
+
+model SectionParagraph {
+  id        Int     @id @default(autoincrement())
+  sectionId Int
+  section   Section @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  kind      String  @default("body")                 // lead | body | note | quote
+  text      String
+  position  Int
+
+  @@index([sectionId, position])
+}
+
+model SectionItem {
+  id        Int     @id @default(autoincrement())
+  sectionId Int
+  section   Section @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  kind      String                                    // step | card | trait | fact | info | highlight | bubble | ingredient
+  title     String
+  text      String?
+  accent    String?
+  imageId   Int?
+  image     Media?  @relation(fields: [imageId], references: [id], onDelete: SetNull)
+  position  Int
+
+  @@index([sectionId, kind, position])
+}
+
+model RendangType {
+  id          Int     @id @default(autoincrement())
+  title       String
+  description String
+  imageId     Int
+  image       Media   @relation(fields: [imageId], references: [id])
+  position    Int
+  isVisible   Boolean @default(true)
+
+  @@index([position])
+}
+
+// store
 model Product {
   id    Int        @id @default(autoincrement())
   name  String

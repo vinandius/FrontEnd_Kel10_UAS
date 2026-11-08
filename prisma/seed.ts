@@ -1,9 +1,16 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import { seedMedia } from "./media";
+import { seedSite } from "./site";
+import { seedSections } from "./section";
 
 const prisma = new PrismaClient();
 
 async function main() {
+  await seedMedia(prisma);
+  await seedSite(prisma);
+  await seedSections(prisma);
+
   await prisma.user.upsert({
     where: { email: "admin@rendang.com" },
     update: {},

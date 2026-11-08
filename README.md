@@ -5,6 +5,19 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 First, run the development server:
 
 ```bash
+npm install
+# then
+make an .env file and copy (
+   DATABASE_URL="file:./dev.db"
+   JWT_SECRET="paste-your-secret-here"
+)
+# then
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+# then
+Npx prima migrate dev
+Npx prisma db seed
+# then
+
 npm run dev
 # or
 yarn dev

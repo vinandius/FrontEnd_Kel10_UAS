@@ -167,3 +167,18 @@ td .btn-add, td .btn-del {
     border-radius: 50%;
     object-fit: cover;
 }
+
+
+/* Media sosial di footer toko (dari tabel SocialLink) */
+#contact .footer a {
+    text-decoration: none;
+}
+
+#contact .footer .social-icon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    vertical-align: middle;
+    object-fit: contain;
+}

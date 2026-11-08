@@ -3,32 +3,20 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import styles from "../../app/page.module.css";
+import type { NavItem } from "../../lib/types";
 
-const navLinks = [
-    {href: "/", label: "Home"},
-    {href: "/home/asal-usul", label: "Asal"},
-    {href: "/home/tentang-rendang", label: "About"},
-    {href: "/home/proses", label: "Proses"},
-    {href: "/home/resep", label: "Bahan"},
-    {href: "/home/makna-rendang", label: "Makna"},
-    {href: "/home/karakter-rendang", label: "Karakter"},
-    {href: "/home/jenis-rendang", label: "Jenis"},
-    {href: "/#contact", label: "Contact"},
-    {href: "/store/store", label: "Toko"},
-];
-
-export default function Navbar(){
+export default function Navbar({ links }: { links: NavItem[] }){
     const pathname = usePathname();
     if (pathname.startsWith("/store/")) return null;
-    
+
     return(
         <div id={styles["navigation"]}>
             <nav>
-                {navLinks.map((item) => (
+                {links.map((item) => (
                     <Link
-                        key={item.href}
-                        href={item.href}
-                        className={pathname === item.href ? styles["active"] : undefined}> {item.label} </Link>
+                        key={item.id}
+                        href={item.path}
+                        className={pathname === item.path ? styles["active"] : undefined}> {item.label} </Link>
                 ))}
             </nav>
         </div>
