@@ -215,7 +215,7 @@ export default function ContentManager() {
       <p>{model.desc}</p>
 
       {(model.canAdd || editId !== null) ? (
-        <form className="admin-form" onSubmit={handleSubmit}>
+        <form className="admin-form content-form" onSubmit={handleSubmit}>
           {model.fields.map((f) => (
             <label key={f.name}
               style={{ display: "flex", flexDirection: "column", flex: "1 1 240px", gap: 4, fontSize: 13 }}>
@@ -236,29 +236,31 @@ export default function ContentManager() {
         <p><em>Bagian ini hanya bisa diedit. Klik Edit pada baris di bawah.</em></p>
       )}
 
-      <table>
-        <thead>
-          <tr>
-            {model.columns.map((c) => <th key={c}>{model.fields.find((f) => f.name === c)!.label}</th>)}
-            <th>Aksi</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row) => (
-            <tr key={row.id}>
-              {model.columns.map((c) => (
-                <td key={c}>{showCell(model.fields.find((f) => f.name === c)!, row)}</td>
-              ))}
-              <td>
-                <button className="btn-add" onClick={() => handleEdit(row)}>Edit</button>
-                {model.canDelete && (
-                  <button className="btn-del" onClick={() => handleDelete(row.id)}>Hapus</button>
-                )}
-              </td>
+      <div className="table-scroll">
+        <table className="content-table">
+          <thead>
+            <tr>
+              {model.columns.map((c) => <th key={c}>{model.fields.find((f) => f.name === c)!.label}</th>)}
+              <th>Aksi</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {rows.map((row) => (
+              <tr key={row.id}>
+                {model.columns.map((c) => (
+                  <td key={c}>{showCell(model.fields.find((f) => f.name === c)!, row)}</td>
+                ))}
+                <td>
+                  <button className="btn-add" onClick={() => handleEdit(row)}>Edit</button>
+                  {model.canDelete && (
+                    <button className="btn-del" onClick={() => handleDelete(row.id)}>Hapus</button>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </>
   );
 }

@@ -182,3 +182,45 @@ td .btn-add, td .btn-del {
     vertical-align: middle;
     object-fit: contain;
 }
+
+/* Form & tabel Konten Situs */
+.admin-form.content-form {
+    align-items: flex-start;
+    gap: 16px 10px;
+}
+
+.admin-form.content-form label {
+    margin: 0;
+}
+
+.admin-form.content-form input[type="checkbox"] {
+    align-self: flex-start;
+    margin: 6px 0 0;
+}
+
+.table-scroll {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.content-table th {
+    white-space: nowrap;
+}
+
+.content-table td {
+    max-width: 240px;
+    overflow-wrap: anywhere;
+    vertical-align: middle;
+}
+
+.content-table tbody td:last-child {
+    display: table-cell;
+    width: 1%;
+}
+
+.content-table tbody td:last-child button {
+    display: block;
+    width: 100%;
+    margin: 0 0 6px;
+    white-space: nowrap;
+}
