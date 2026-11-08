@@ -12,7 +12,6 @@ export default async function History() {
 
             <div id={styles["contfr"]}>
                 <div id={styles["history"]}>
-                    <div className={styles["section-label"]}>{sectionLabel(section)}</div>
                     <h1>{section.title}</h1>
                     <div className={styles["history-content"]}>
                         {section.image && (

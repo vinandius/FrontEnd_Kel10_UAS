@@ -159,7 +159,7 @@ export default function AdminPage() {
       )}
 
       <p className="alt">
-        <Link href="/store/store">Kembali ke toko</Link> |{" "}
+        <Link href="/store">Kembali ke toko</Link> |{" "}
         <a href="#" onClick={ async (e) => { e.preventDefault(); await logout(); await refresh(); router.push("/store/login"); }}>
           Keluar (log out)
         </a>

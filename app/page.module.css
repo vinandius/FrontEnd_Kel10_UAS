@@ -19,7 +19,7 @@
     user-select: none;
 }
 
-.section-number, .section-label{
+.section-label{
     margin-bottom: 12px;
     color: var(--red);
     font-size: 10px;
@@ -122,6 +122,70 @@
     background-color: var(--brown-dark) !important;
     color: var(--cream) !important;
     border-color: var(--brown-dark) !important;
+}
+
+/* STORE NAVBAR - MOBILE DROPDOWN */
+#navigation .storeNavMobileHeader {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+#navigation .storeNavToggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border: none;
+    background: transparent;
+    color: var(--brown-dark);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+#navigation .storeNavMenuIcon {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 21px;
+}
+
+#navigation .storeNavMenuIcon span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: var(--brown-dark);
+}
+
+#navigation nav.storeNavLinks {
+     display: none;
+     flex-direction: column;
+     flex-wrap: nowrap;
+     align-items: stretch;
+    justify-content: flex-start;
+     gap: 8px;
+    padding-top: 12px;
+}
+
+#navigation nav.storeNavLinks.storeNavLinksOpen {
+    display: flex;
+}
+
+#navigation nav.storeNavLinks a {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+
+#navigation .storeNavToggle:focus-visible {
+    outline: 2px solid var(--red);
+    outline-offset: 4px;
 }
 
 #hero-image{
@@ -1047,6 +1111,206 @@
     font-size: 13px;
 }
 
+/* Main NAVBAR DROPDOWN */
+
+#mainNavigation{
+    position: relative;
+    width: 100%;
+    padding: 12px 20px;
+    background-color: var(--cream);
+    z-index: 999;
+}
+
+#mainNavigation .mainNavTop {
+    display: flex;
+    justify-content: flex-end;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+#mainNavigation .mobileMenuButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border: none;
+    background: transparent;
+    color: var(--brown-dark);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+#mainNavigation .mobileMenuIcon{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 21px;
+}
+
+#mainNavigation .mobileMenuIcon span {
+    display:block;
+    width: 100%;
+    height: 2px;
+    background-color: var(--brown-dark);
+    transition: transform 0.2s ease;
+}
+
+#mainNavigation .mainNavLinks {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-top: 10px;
+}
+
+#mainNavigation .mainNavLinksOpen {
+    display: flex;
+}
+
+#mainNavigation .mainNavLink,
+#mainNavigation .mainNavDropdownButton {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 14px 5px;
+    border: none;
+    border-bottom: 1px solid var(--cream-dark);
+    border-radius: 0;
+    background: transparent;
+    color: var(--brown-dark);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#mainNavigation .mainNavLink:hover,
+#mainNavigation .mainNavDropdownButton:hover,
+#mainNavigation .mainNavActive {
+    color: var(--red);
+}
+
+#mainNavigation .mainNavDropdown {
+    width: 100%;
+}
+
+#mainNavigation .mainNavChevron {
+    width: 8px;
+    height: 8px;
+    margin-right: 5px;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: rotate(45deg);
+    transition: transform 0.2s ease;
+}
+
+#mainNavigation .mainNavChevronOpen {
+    transform: rotate(225deg);
+}
+
+#mainNavigation .mainNavDropdownMenu {
+    display: flex;
+    flex-direction: column;
+    padding: 5px 0 10px 15px;
+    border-left: 1px solid var(--cream-dark);
+}
+
+#mainNavigation .mainNavDropdownMenu a {
+    padding: 10px 8px;
+    color: var(--brown);
+    font-size: 12px;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+#mainNavigation .mainNavDropdownMenu a:hover,
+#mainNavigation .mainNavDropdownMenu a.mainNavActive {
+    color: var(--red);
+}
+
+#mainNavigation button:focus-visible,
+#mainNavigation a:focus-visible {
+    outline: 2px solid var(--red);
+    outline-offset: 4px;
+}
+
+/* DESKTOP*/
+@media (min-width: 769px) {
+
+    #mainNavigation .mainNavTop {
+        display: none;
+    }
+
+    #mainNavigation .mainNavLinks {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: clamp(22px, 3vw, 42px);
+        padding-top: 0;
+    }
+
+    #mainNavigation .mainNavLink,
+    #mainNavigation .mainNavDropdownButton {
+        width: auto;
+        padding: 5px 0;
+        border: none;
+        border-bottom: 1px solid transparent;
+        background: transparent;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    #mainNavigation .mainNavLink:hover,
+    #mainNavigation .mainNavDropdownButton:hover,
+    #mainNavigation .mainNavActive {
+        border-bottom-color: var(--red);
+    }
+
+    #mainNavigation .mainNavDropdown {
+        position: relative;
+        width: auto;
+    }
+
+    #mainNavigation .mainNavDropdownButton {
+        gap: 12px;
+    }
+
+    #mainNavigation .mainNavDropdownMenu {
+        position: absolute;
+        top: calc(100% + 12px);
+        left: -15px;
+        min-width: 220px;
+        padding: 8px 0;
+        border: 1px solid var(--cream-dark);
+        border-left: none;
+        background-color: var(--cream-light);
+        box-shadow: 0 8px 20px rgba(53, 23, 13, 0.10);
+        z-index: 1000;
+    }
+
+    #mainNavigation .mainNavDropdownMenu a {
+        padding: 11px 16px;
+        font-size: 12px;
+    }
+
+    #mainNavigation .mainNavDropdownMenu a:hover {
+        background-color: var(--cream);
+    }
+
+}
+
 
 /*TABLET */
 @media (min-width: 768px) {
@@ -1059,8 +1323,28 @@
         font-size: 78px;
     }
 
-    #navigation nav {
+    #navigation nav.storeNavLinks {
+        gap: 38px;
+    }
+
+    /* STORE NAVBAR - TABLET AND DESKTOP */
+    #navigation .storeNavMobileHeader {
+        display: none;
+    }
+
+    #navigation nav.storeNavLinks {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: stretch;
+        justify-content: center;
         gap: 25px;
+        padding-top: 0;
+    }
+
+    #navigation nav.storeNavLinks a {
+        width: auto;
+        flex: 0 0 auto;
     }
 
     #hero-image {

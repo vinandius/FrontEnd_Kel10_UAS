@@ -34,13 +34,13 @@ export default function AccPage() {
         onClick={async () => {
           await logout();
           await refresh();
-          router.push("/store/store");
+          router.push("/store");
         }}
       >
         Log Out
       </button>
 
-      <p className="alt"><Link href="/store/store">Kembali ke toko</Link></p>
+      <p className="alt"><Link href="/store">Kembali ke toko</Link></p>
     </main>
   );
 }

@@ -83,7 +83,7 @@ export default function CartView({ texts, fallbackImage }: CartViewProps) {
       </div>
       <p className="total">{tx(texts, "cart.total")} <strong>{formatRupiah(total)}</strong></p>
       <button className="btn-add" onClick={handleCheckout}>{tx(texts, "cart.checkout")}</button>
-      <p className="alt"><Link href="/store/store">{tx(texts, "cart.continue")}</Link></p>
+      <p className="alt"><Link href="/store">{tx(texts, "cart.continue")}</Link></p>
 
       {!user && (
         <AuthWarning

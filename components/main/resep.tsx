@@ -25,10 +25,6 @@ export default async function Resep() {
 
             <div id={styles["recipe"]}>
 
-                <div className={styles["section-label"]}>
-                    {sectionLabel(section)}
-                </div>
-
                 <div className={styles["recipe-heading"]}>
                     <div>
                         <h1>{section.title}</h1>

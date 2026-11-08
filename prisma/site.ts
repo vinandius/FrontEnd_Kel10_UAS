@@ -22,7 +22,7 @@ const NAV_LINKS = [
   { menu: "main", label: "Karakter", path: "/home/karakter-rendang" },
   { menu: "main", label: "Jenis", path: "/home/jenis-rendang" },
   { menu: "main", label: "Contact", path: "/#contact" },
-  { menu: "main", label: "Toko", path: "/store/store" },
+  { menu: "main", label: "Toko", path: "/store" },
 
   { menu: "store", label: "Home", path: "/" },
   { menu: "store", label: "Lists", path: "#jendang" },

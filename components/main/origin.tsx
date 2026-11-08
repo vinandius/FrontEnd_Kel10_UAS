@@ -8,7 +8,6 @@ export default async function Origin() {
     return(
         <section id={styles.origin} className={styles["editorial-section"]}>
             <div className={styles["section-heading"]}>
-                <p className={styles["section-number"]}>{sectionLabel(section)}</p>
                 <h2>{section.title}</h2>
             </div>
 
