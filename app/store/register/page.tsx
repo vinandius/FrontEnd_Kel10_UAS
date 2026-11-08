@@ -19,7 +19,7 @@ export default function RegisterPage() {
       return;
     }
     alert("Pendaftaran berhasil. Silakan masuk.");
-    router.push("/store/store");
+    router.push("/store");
   }
 
   return (
@@ -39,7 +39,7 @@ export default function RegisterPage() {
         <button type="submit" className="btn-add">Daftar</button>
       </form>
       <p className="alt">
-        Sudah punya akun? <Link href="/store/login">Masuk</Link> | <Link href="/store/store">Kembali</Link>
+        Sudah punya akun? <Link href="/store/login">Masuk</Link> | <Link href="/store">Kembali</Link>
       </p>
     </main>
   );

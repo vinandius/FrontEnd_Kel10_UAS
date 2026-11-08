@@ -19,7 +19,7 @@
     user-select: none;
 }
 
-.section-number, .section-label{
+.section-label{
     margin-bottom: 12px;
     color: var(--red);
     font-size: 10px;

@@ -17,7 +17,7 @@ export default function LoginPage() {
       setMsg("Email atau password salah.");
       return;
     }
-    router.push("/store/store");
+    router.push("/store");
   }
 
   return (
@@ -34,7 +34,7 @@ export default function LoginPage() {
         <button type="submit" className="btn-add">Masuk</button>
       </form>
       <p className="alt">
-        Belum punya akun? <Link href="/store/register">Daftar</Link> | <Link href="/store/store">Kembali</Link>
+        Belum punya akun? <Link href="/store/register">Daftar</Link> | <Link href="/store">Kembali</Link>
       </p>
     </main>
   );
