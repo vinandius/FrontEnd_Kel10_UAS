@@ -8,9 +8,6 @@ export default function Resep() {
 
             <div id={styles["recipe"]}>
 
-                <div className={styles["section-label"]}>
-                    04 · BAHAN
-                </div>
 
                 <div className={styles["recipe-heading"]}>
                     <div>

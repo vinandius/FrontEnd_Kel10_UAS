@@ -6,7 +6,6 @@ export default function History() {
 
             <div id={styles["contfr"]}>
                 <div id={styles["history"]}>
-                    <div className={styles["section-label"]}>02 · MENGENAL RENDANG</div>
                     <h1>Apa sebenarnya rendang?</h1>   
                     <div className={styles["history-content"]}>
                         <div className={styles["history-img"]}>

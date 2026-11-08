@@ -59,7 +59,6 @@ export default function Jenis() {
         <section id={styles["types-section"]}>
             <div id={styles["jendang"]}>
 
-                <div className={styles["section-label"]}> 07 · JENIS</div>
                 <h1> Jenis Rendang</h1>
 
                 <div className={styles["types-intro"]}>

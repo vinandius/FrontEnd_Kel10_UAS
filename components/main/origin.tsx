@@ -4,7 +4,6 @@ export default function Origin() {
     return(
         <section id={styles.origin} className={styles["editorial-section"]}>
             <div className={styles["section-heading"]}>
-                <p className={styles["section-number"]}>01 · ASAL-USUL</p>
                 <h2>Berawal dari Minangkabau</h2>
             </div>
 

@@ -6,9 +6,6 @@ export default function Closing() {
         <section id={styles["closing-section"]}>
 
             <div className={styles["closing-text"]}>
-                <div className={styles["section-label"]}>
-                    08 · PENUTUP
-                </div>
                 <h1>
                     Dari tanah Minangkabau,
                     lahir rasa yang panjang ceritanya.
