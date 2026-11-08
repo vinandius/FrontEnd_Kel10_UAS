@@ -5,7 +5,6 @@ export default function Info2() {
         <section id={styles["character-section"]}>
 
             <div className={styles["character-heading"]}>
-                <div className={styles["section-label"]}>06 · KARAKTER</div>
                 <h1> Tiga hal yang membentuk karakter rendang. </h1>
             </div>
 

@@ -5,7 +5,6 @@ export default function Info1() {
         <section id={styles["culture-section"]} className={styles["editorial-section"]}>
 
             <div className={styles["section-header"]}>
-                <p className={styles["section-number"]}>05 · MAKNA</p>
                 <h2>Lebih dari sekadar hidangan.</h2>
             </div>
 

@@ -5,7 +5,6 @@ export default function Proses() {
         <section id={styles["process-section"]}>
 
             <div className={styles["process-heading"]}>
-                <div className={styles["section-label"]}> 03 · PROSES MASAK</div>
                 <h1> Dari Gulai menjadi Rendang</h1>
                 <p>Rendang tidak langsung menjadi kering. Proses memasaknya berkembang melalui perubahan tekstur dan jumlah cairan.</p>
             </div>
