@@ -1,25 +1,26 @@
-import { getUsers, saveUsers, User } from "./db";
+type Result = { ok: true } | { ok: false; message: string };
 
-export function register(name: string, email: string, password: string): boolean {
-  const users = getUsers();
-  if (users.some((u) => u.email === email)) return false;
-  users.push({ name, email, password, role: "customer" });
-  saveUsers(users);
-  return true;
+async function post(url: string, body: unknown): Promise<Result> {
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    if (res.ok) return { ok: true };
+    const data = await res.json().catch(() => ({}));
+    return { ok: false, message: data.message ?? "Terjadi kesalahan." };
+  } catch {
+    return { ok: false, message: "Tidak dapat terhubung ke server." };
+  }
 }
 
-export function login(email: string, password: string): boolean {
-  const user = getUsers().find((u) => u.email === email && u.password === password);
-  if (!user) return false;
-  localStorage.setItem("currentUser", JSON.stringify(user));
-  return true;
-}
+export const login = (email: string, password: string) =>
+  post("/api/auth/login", { email, password });
 
-export function getCurrentUser(): User | null {
-  const raw = localStorage.getItem("currentUser");
-  return raw ? (JSON.parse(raw) as User) : null;
-}
+export const register = (name: string, email: string, password: string) =>
+  post("/api/auth/register", { name, email, password });
 
-export function logout() {
-  localStorage.removeItem("currentUser");
+export async function logout() {
+  await fetch("/api/auth/logout", { method: "POST" });
 }

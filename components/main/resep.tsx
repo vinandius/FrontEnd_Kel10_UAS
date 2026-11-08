@@ -1,6 +1,23 @@
+import type { CSSProperties } from "react";
 import styles from "../../app/page.module.css";
+import { getSection, getTexts } from "../../lib/content";
+import { pad2, sectionLabel, tx } from "../../lib/format";
 
-export default function Resep() {
+// jumlah lingkaran yang punya posisi melayang di CSS (ingredient-pos-1 s/d 5); sisanya berbaris di bawah
+const FLOATING_SLOTS = 5;
+
+const accentStyle = (accent: string | null): CSSProperties | undefined =>
+    accent ? { backgroundColor: `var(--${accent})` } : undefined;
+
+export default async function Resep() {
+    const [section, t] = await Promise.all([getSection("recipe"), getTexts("recipe")]);
+
+    const bubbles = section.items.filter((item) => item.kind === "bubble");
+    const floating = bubbles.slice(0, FLOATING_SLOTS);
+    const overflow = bubbles.slice(FLOATING_SLOTS);
+    const ingredients = section.items.filter((item) => item.kind === "ingredient");
+    const note = section.paragraphs.find((paragraph) => paragraph.kind === "note");
+
     return(
         <section id={styles["recipe-section"]}>
 
@@ -8,92 +25,76 @@ export default function Resep() {
 
             <div id={styles["recipe"]}>
 
+                <div className={styles["section-label"]}>
+                    {sectionLabel(section)}
+                </div>
 
                 <div className={styles["recipe-heading"]}>
                     <div>
-                        <h1>Bukan cuma daging.</h1>
-                        <h2>Karakter rendang dibangun dari rempah.</h2>
+                        <h1>{section.title}</h1>
+                        {section.subtitle && <h2>{section.subtitle}</h2>}
                     </div>
 
-                    <p>
-                        Pertemuan daging, santan, cabai, dan rempah
-                        membentuk rasa yang menjadi ciri khas rendang.
-                    </p>
+                    {section.description && <p>{section.description}</p>}
                 </div>
 
-
-                {/* <!-- Bahan --> */}
                 <div className={styles["ingredient-area"]}>
 
-                    <div className={`${styles["ingredient-circle"]} ${styles["ingredient-cabai"]}`}>
-                        <img src="/Photos/cabe.png" alt="Cabai"/>
-                        <span>Cabai</span>
-                    </div>
-
-                    <div className={`${styles["ingredient-circle"]} ${styles["ingredient-jahe"]}`}>
-                        <img src="/Photos/jahe.png" alt="Jahe"/>
-                        <span>Jahe</span>
-                    </div>
-
-                    <div className={`${styles["ingredient-circle"]} ${styles["ingredient-lengkuas"]}`}>
-                        <img src="/Photos/lengkuas.png" alt="Lengkuas"/>
-                        <span>Lengkuas</span>
-                    </div>
-
-                    <div className={`${styles["ingredient-circle"]} ${styles["ingredient-santan"]}`}>
-                        <img src="/Photos/santan.png" alt="Santan"/>
-                        <span>Santan</span>
-                    </div>
-
-                    <div className={`${styles["ingredient-circle"]} ${styles["ingredient-daun"]}`}>
-                        <img src="/Photos/daun.png" alt="Daun"/>
-                        <span>Serai</span>
-                    </div>
+                    {floating.map((item, index) => (
+                        <div
+                            key={item.id}
+                            className={`${styles["ingredient-circle"]} ${styles[`ingredient-pos-${index + 1}`]}`}
+                            style={accentStyle(item.accent)}>
+                            {item.image && <img src={item.image.url} alt={item.image.alt}/>}
+                            <span>{item.title}</span>
+                        </div>
+                    ))}
 
                     <div className={styles["ingredient-center"]}>
-                        <span>RASA</span>
-                        <strong>MINANG</strong>
+                        <span>{tx(t, "recipe.center.top")}</span>
+                        <strong>{tx(t, "recipe.center.bottom")}</strong>
                     </div>
 
                 </div>
 
+                {overflow.length > 0 && (
+                    <div className={styles["ingredient-more"]}>
+                        {overflow.map((item) => (
+                            <div
+                                key={item.id}
+                                className={`${styles["ingredient-circle"]} ${styles["ingredient-circle-static"]}`}
+                                style={accentStyle(item.accent)}>
+                                {item.image && <img src={item.image.url} alt={item.image.alt}/>}
+                                <span>{item.title}</span>
+                            </div>
+                        ))}
+                    </div>
+                )}
 
                 <div className={styles["recipe-content"]}>
 
-                    <div className={styles["recipe-image"]}>
-                        <img src="/Photos/bumbu.png" alt="Bumbu dan rempah rendang"/>
-                    </div>
+                    {section.image && (
+                        <div className={styles["recipe-image"]}>
+                            <img src={section.image.url} alt={section.image.alt}/>
+                        </div>
+                    )}
 
                     <div className={styles["recipe-text"]}>
 
-                        <span className={styles["recipe-small-title"]}> RASA YANG DIBANGUN BERSAMA </span>
-                        <h2> Rempah, santan, dan waktu. </h2>
-                        <p> Rendang menggunakan berbagai rempah yang menjadi bagian penting dari rasa dan aromanya. </p>
+                        <span className={styles["recipe-small-title"]}> {tx(t, "recipe.side.label")} </span>
+                        <h2> {tx(t, "recipe.side.title")} </h2>
+                        <p> {tx(t, "recipe.side.description")} </p>
 
                         <div className={styles["ingredient-list"]}>
-                            <div className={styles["ingredient"]}>
-                                <span>01</span>
-                                <strong>Daging</strong>
-                            </div>
-
-                            <div className={styles["ingredient"]}>
-                                <span>02</span>
-                                <strong>Santan</strong>
-                            </div>
-
-                            <div className={styles["ingredient"]}>
-                                <span>03</span>
-                                <strong>Cabai</strong>
-                            </div>
-
-                            <div className={styles["ingredient"]}>
-                                <span>04</span>
-                                <strong>Rempah</strong>
-                            </div>
-
+                            {ingredients.map((item, index) => (
+                                <div key={item.id} className={styles["ingredient"]}>
+                                    <span>{pad2(index + 1)}</span>
+                                    <strong>{item.title}</strong>
+                                </div>
+                            ))}
                         </div>
 
-                        <p className={styles["ingredient-note"]}> Bumbu halus dapat meliputi bawang, cabai merah, jahe, kunyit, lengkuas, dan ketumbar. Rempah aromatiknya antara lain serai, daun salam, daun jeruk, dan daun kunyit.</p>
+                        {note && <p className={styles["ingredient-note"]}> {note.text}</p>}
 
                     </div>
 

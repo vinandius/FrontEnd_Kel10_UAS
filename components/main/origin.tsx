@@ -1,32 +1,42 @@
 import styles from "../../app/page.module.css";
+import { getSection, getTexts } from "../../lib/content";
+import { sectionLabel, tx } from "../../lib/format";
 
-export default function Origin() {
+export default async function Origin() {
+    const [section, t] = await Promise.all([getSection("origin"), getTexts("origin")]);
+
     return(
         <section id={styles.origin} className={styles["editorial-section"]}>
             <div className={styles["section-heading"]}>
-                <h2>Berawal dari Minangkabau</h2>
+                <p className={styles["section-number"]}>{sectionLabel(section)}</p>
+                <h2>{section.title}</h2>
             </div>
 
             <div className={styles["origin-layout"]}>
                 <div className={styles["origin-visual"]}>
-                    <div className={styles["origin-img"]}>
-                        <img src="/Photos/minangkabau.jpg" alt="Minangkabau, Sumatera Barat" />
-                    </div>
+                    {section.image && (
+                        <div className={styles["origin-img"]}>
+                            <img src={section.image.url} alt={section.image.alt} />
+                        </div>
+                    )}
 
                     <div className={styles["origin-title"]}>
-                        <p>DARI</p>
-                        <h3>MINANGKABAU</h3>
-                        <span>Sumatera Barat</span>
+                        <p>{tx(t, "origin.badge.prefix")}</p>
+                        <h3>{tx(t, "origin.badge.name")}</h3>
+                        <span>{tx(t, "origin.badge.region")}</span>
                     </div>
                 </div>
 
                 <div className={styles["origin-text"]}>
-                    <p className={styles["lead"]}> Rendang merupakan masakan tradisional yang identik dengan masyarakat Minangkabau, Sumatera Barat.</p>
-                    <p>Rendang berkembang dalam tradisi kuliner Minangkabau dan menjadi bagian dari kehidupan masyarakatnya. Dari wilayah inilah rendang kemudian dikenal luas sebagai salah satu masakan Indonesia.</p>
+                    {section.paragraphs.map((paragraph) => (
+                        <p key={paragraph.id} className={paragraph.kind === "lead" ? styles["lead"] : undefined}>
+                            {paragraph.text}
+                        </p>
+                    ))}
 
                     <div className={styles["origin-location"]}>
-                        <span>ASAL</span>
-                        <strong>Minangkabau, Sumatera Barat</strong>
+                        <span>{tx(t, "origin.location.label")}</span>
+                        <strong>{tx(t, "origin.location.value")}</strong>
                     </div>
                 </div>
             </div>

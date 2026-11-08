@@ -1,36 +1,35 @@
 import styles from "../../app/page.module.css";
+import { getSection } from "../../lib/content";
+import { pad2, sectionLabel } from "../../lib/format";
 
-export default function Info1() {
+export default async function Info1() {
+    const section = await getSection("meaning");
+    const cards = section.items.filter((item) => item.kind === "card");
+    const quote = section.paragraphs.find((paragraph) => paragraph.kind === "quote");
+
     return(
         <section id={styles["culture-section"]} className={styles["editorial-section"]}>
 
             <div className={styles["section-header"]}>
-                <h2>Lebih dari sekadar hidangan.</h2>
+                <p className={styles["section-number"]}>{sectionLabel(section)}</p>
+                <h2>{section.title}</h2>
             </div>
 
             <div className={styles["culture-grid"]}>
-                <div className={styles["culture-card"]}>
-                    <span>01</span>
-                    <h3>Tradisi</h3>
-                    <p>Rendang hadir dalam berbagai kegiatan dan tradisi masyarakat Minangkabau.</p>
-                </div>
-
-                <div className={styles["culture-card"]}>
-                    <span>02</span>
-                    <h3>Perjalanan</h3>
-                    <p>Rendang dikenal sebagai makanan yang dapat bertahan lama sehingga sesuai dengan perjalanan masyarakat  Minangkabau.</p>
-                </div>
-
-                <div className={styles["culture-card"]}>
-                    <span>03</span>
-                    <h3>Warisan</h3>
-                    <p>Pengetahuan tentang bahan dan cara memasak diteruskan dari satu generasi ke generasi berikutnya.</p>
-                </div>
+                {cards.map((card, index) => (
+                    <div key={card.id} className={styles["culture-card"]}>
+                        <span>{pad2(index + 1)}</span>
+                        <h3>{card.title}</h3>
+                        <p>{card.text}</p>
+                    </div>
+                ))}
             </div>
 
-            <div className={styles["quote-box"]}>
-                <p>&quot;Sebuah hidangan yang membutuhkan waktu, kesabaran, dan banyak rempah.&quot;</p>
-            </div>
+            {quote && (
+                <div className={styles["quote-box"]}>
+                    <p>{`"${quote.text}"`}</p>
+                </div>
+            )}
 
         </section>
     )

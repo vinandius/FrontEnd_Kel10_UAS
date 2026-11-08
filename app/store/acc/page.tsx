@@ -3,19 +3,17 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { getCurrentUser, logout } from "../../../lib/auth";
-import { User } from "../../../lib/db";
+import { useEffect } from "react";
+import { logout } from "../../../lib/auth";
+import { useAuth } from "@/components/store/AuthProvider";
 
 export default function AccPage() {
   const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
+  const { user, loading, refresh } = useAuth();
 
   useEffect(() => {
-    const u = getCurrentUser();
-    if (!u) router.replace("/store/login");
-    else setUser(u);
-  }, [router]);
+    if (!loading && !user) router.replace("/store/login");
+    }, [loading, user, router]);
 
   if (!user) return null;
 
@@ -33,8 +31,9 @@ export default function AccPage() {
       )}
       <button
         className="btn-del"
-        onClick={() => {
-          logout();
+        onClick={async () => {
+          await logout();
+          await refresh();
           router.push("/store");
         }}
       >

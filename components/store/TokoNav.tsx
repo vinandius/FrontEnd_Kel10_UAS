@@ -3,28 +3,16 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { getCurrentUser } from "../../lib/auth";
 import styles from "../../app/page.module.css";
+import type { NavItem } from "../../lib/types";
+import { useAuth } from "./AuthProvider";
 
-const navLinks = [
-    { href: "/", label: "Home" },
-    { href: "#jendang", label: "Lists" },
-    { href: "#contact", label: "Contact" },
-    { href: "/store/cart", label: "Keranjang" },
-];
-
-export default function TokoNav() {
+export default function TokoNav({ links }: { links: NavItem[] }) {
     const pathname = usePathname();
+    const { user } = useAuth();
+    const loggedIn = user !== null;
 
-    const [loggedIn, setLoggedIn] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
-
-    // Mengecek status login dari localStorage.
-    useEffect(() => {
-        /* eslint-disable react-hooks/set-state-in-effect */
-        setLoggedIn(getCurrentUser() !== null);
-        /* eslint-enable react-hooks/set-state-in-effect */
-    }, []);
 
     useEffect(() => {
         function handleEscape(event: KeyboardEvent) {
@@ -40,12 +28,11 @@ export default function TokoNav() {
         };
     }, []);
 
-    const links = [
-        ...navLinks,
-        loggedIn
-            ? { href: "/store/acc", label: "Akun" }
-            : { href: "/store/login", label: "Login" },
-    ];
+    const visibleLinks = links.filter((item) => {
+        if (item.visibility === "member") return loggedIn;
+        if (item.visibility === "guest") return !loggedIn;
+        return true;
+    });
 
     function closeMenu() {
         setMenuOpen(false);
@@ -88,12 +75,12 @@ export default function TokoNav() {
                 }`}
                 aria-label="Navigasi toko"
             >
-                {links.map((item) => (
+                {visibleLinks.map((item) => (
                     <Link
-                        key={item.href}
-                        href={item.href}
+                        key={item.id}
+                        href={item.path}
                         className={
-                            pathname === item.href
+                            pathname === item.path
                                 ? styles["active"]
                                 : undefined
                         }

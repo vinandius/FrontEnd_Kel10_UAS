@@ -4,25 +4,24 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import styles from "../../app/page.module.css";
+import type { NavItem } from "../../lib/types";
 
-const aboutLinks = [
-    { href: "/home/asal-usul", label: "Asal-usul" },
-    { href: "/home/tentang-rendang", label: "Tentang Rendang" },
-    { href: "/home/proses", label: "Proses" },
-    { href: "/home/resep", label: "Bahan dan Resep" },
-    { href: "/home/makna-rendang", label: "Makna" },
-    { href: "/home/karakter-rendang", label: "Karakter" },
-    { href: "/home/jenis-rendang", label: "Jenis" },
-];
-
-export default function Navbar() {
+export default function Navbar({ links }: { links: NavItem[] }) {
     const pathname = usePathname();
 
     const [mobileOpen, setMobileOpen] = useState(false);
     const [aboutOpen, setAboutOpen] = useState(false);
 
+    const homeItem = links.find((item) => item.path === "/");
+    const aboutLinks = links.filter((item) =>
+        item.path.startsWith("/home/")
+    );
+    const otherLinks = links.filter(
+        (item) => item.path !== "/" && !item.path.startsWith("/home/")
+    );
+
     const aboutActive = aboutLinks.some(
-        (item) => pathname === item.href
+        (item) => pathname === item.path
     );
 
     function closeMenus() {
@@ -107,76 +106,75 @@ export default function Navbar() {
                 }`}
                 aria-label="Navigasi utama"
             >
-                <Link
-                    href="/"
-                    className={`${styles["mainNavLink"]} ${
-                        pathname === "/" ? styles["mainNavActive"] : ""
-                    }`}
-                    onClick={closeMenus}
-                >
-                    Home
-                </Link>
-
-                <div className={styles["mainNavDropdown"]}>
-                    <button
-                        type="button"
-                        className={`${styles["mainNavDropdownButton"]} ${
-                            aboutActive ? styles["mainNavActive"] : ""
+                {homeItem && (
+                    <Link
+                        href={homeItem.path}
+                        className={`${styles["mainNavLink"]} ${
+                            pathname === "/" ? styles["mainNavActive"] : ""
                         }`}
-                        aria-expanded={aboutOpen}
-                        aria-haspopup="true"
-                        aria-controls="about-nav-links"
-                        onClick={() => setAboutOpen(!aboutOpen)}
+                        onClick={closeMenus}
                     >
-                        Tentang Rendang
+                        {homeItem.label}
+                    </Link>
+                )}
 
-                        <span
-                            className={`${styles["mainNavChevron"]} ${
-                                aboutOpen
-                                    ? styles["mainNavChevronOpen"]
-                                    : ""
+                {aboutLinks.length > 0 && (
+                    <div className={styles["mainNavDropdown"]}>
+                        <button
+                            type="button"
+                            className={`${styles["mainNavDropdownButton"]} ${
+                                aboutActive ? styles["mainNavActive"] : ""
                             }`}
-                        />
-                    </button>
-
-                    {aboutOpen && (
-                        <div
-                            id="about-nav-links"
-                            className={styles["mainNavDropdownMenu"]}
+                            aria-expanded={aboutOpen}
+                            aria-haspopup="true"
+                            aria-controls="about-nav-links"
+                            onClick={() => setAboutOpen(!aboutOpen)}
                         >
-                            {aboutLinks.map((item) => (
-                                <Link
-                                    key={item.href}
-                                    href={item.href}
-                                    className={
-                                        pathname === item.href
-                                            ? styles["mainNavActive"]
-                                            : ""
-                                    }
-                                    onClick={closeMenus}
-                                >
-                                    {item.label}
-                                </Link>
-                            ))}
-                        </div>
-                    )}
-                </div>
+                            Tentang Rendang
 
-                <Link
-                    href="/#contact"
-                    className={styles["mainNavLink"]}
-                    onClick={closeMenus}
-                >
-                    Contact
-                </Link>
+                            <span
+                                className={`${styles["mainNavChevron"]} ${
+                                    aboutOpen
+                                        ? styles["mainNavChevronOpen"]
+                                        : ""
+                                }`}
+                            />
+                        </button>
 
-                <Link
-                    href="/store"
-                    className={styles["mainNavLink"]}
-                    onClick={closeMenus}
-                >
-                    Toko
-                </Link>
+                        {aboutOpen && (
+                            <div
+                                id="about-nav-links"
+                                className={styles["mainNavDropdownMenu"]}
+                            >
+                                {aboutLinks.map((item) => (
+                                    <Link
+                                        key={item.id}
+                                        href={item.path}
+                                        className={
+                                            pathname === item.path
+                                                ? styles["mainNavActive"]
+                                                : ""
+                                        }
+                                        onClick={closeMenus}
+                                    >
+                                        {item.label}
+                                    </Link>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                )}
+
+                {otherLinks.map((item) => (
+                    <Link
+                        key={item.id}
+                        href={item.path}
+                        className={styles["mainNavLink"]}
+                        onClick={closeMenus}
+                    >
+                        {item.label}
+                    </Link>
+                ))}
             </nav>
         </div>
     );

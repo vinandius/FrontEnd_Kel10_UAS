@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { register } from "../../../lib/auth";
+import { useAuth } from "@/components/store/AuthProvider";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -11,13 +12,16 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [msg, setMsg] = useState("");
+  const refresh = useAuth();
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!register(name.trim(), email.trim(), password)) {
+    const res = await register(name.trim(), email.trim(), password);
+    if (!res.ok) {
       setMsg("Email sudah terdaftar.");
       return;
     }
+    await refresh;
     alert("Pendaftaran berhasil. Silakan masuk.");
     router.push("/store");
   }
