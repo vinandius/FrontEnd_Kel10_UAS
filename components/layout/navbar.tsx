@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "../../app/page.module.css";
 
 const aboutLinks = [
@@ -21,8 +21,6 @@ export default function Navbar() {
     const [mobileOpen, setMobileOpen] = useState(false);
     const [aboutOpen, setAboutOpen] = useState(false);
 
-    const navRef = useRef<HTMLDivElement | null>(null);
-
     const aboutActive = aboutLinks.some(
         (item) => pathname === item.href
     );
@@ -32,21 +30,17 @@ export default function Navbar() {
         setAboutOpen(false);
     }
 
-    // Tutup menu ketika pengguna berpindah halaman.
+    // Menutup menu ketika klik di luar Navbar atau menekan Escape.
     useEffect(() => {
-        /* eslint-disable react-hooks/set-state-in-effect */
-        setMobileOpen(false);
-        setAboutOpen(false);
-        /* eslint-enable react-hooks/set-state-in-effect */
-    }, [pathname]);
+        const navElement = document.getElementById(
+            styles["mainNavigation"]
+        );
 
-    // Tutup dropdown ketika pengguna mengeklik bagian luar navbar
-    // atau menekan tombol Escape.
-    useEffect(() => {
         function handleOutsideClick(event: PointerEvent) {
             if (
-                navRef.current &&
-                !navRef.current.contains(event.target as Node)
+                navElement &&
+                event.target instanceof Node &&
+                !navElement.contains(event.target)
             ) {
                 closeMenus();
             }
@@ -67,16 +61,24 @@ export default function Navbar() {
         };
     }, []);
 
-    // Navbar utama tidak ditampilkan pada halaman toko.
-    if (pathname === "/store" || pathname.startsWith("/store/")) {
+    // Menutup menu ketika halaman berubah.
+    useEffect(() => {
+        /* eslint-disable react-hooks/set-state-in-effect */
+        setMobileOpen(false);
+        setAboutOpen(false);
+    }, [pathname]);
+
+    //navbar main
+    if (
+        pathname === "/store" ||
+        pathname.startsWith("/store/")
+    ) {
         return null;
     }
 
     return (
-        <div
-            id={styles["mainNavigation"]}
-            ref={navRef}
-        >
+        <div id={styles["mainNavigation"]}>
+
             <div className={styles["mainNavTop"]}>
                 <button
                     type="button"
@@ -92,7 +94,9 @@ export default function Navbar() {
                         <span />
                     </span>
 
-                    <span>{mobileOpen ? "Tutup" : "Menu"}</span>
+                    <span>
+                        {mobileOpen ? "Tutup" : "Menu"}
+                    </span>
                 </button>
             </div>
 
@@ -128,7 +132,9 @@ export default function Navbar() {
 
                         <span
                             className={`${styles["mainNavChevron"]} ${
-                                aboutOpen ? styles["mainNavChevronOpen"] : ""
+                                aboutOpen
+                                    ? styles["mainNavChevronOpen"]
+                                    : ""
                             }`}
                         />
                     </button>
@@ -166,9 +172,7 @@ export default function Navbar() {
 
                 <Link
                     href="/store"
-                    className={`${styles["mainNavLink"]} ${
-                        pathname === "/store" ? styles["mainNavActive"] : ""
-                    }`}
+                    className={styles["mainNavLink"]}
                     onClick={closeMenus}
                 >
                     Toko
