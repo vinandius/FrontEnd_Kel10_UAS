@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import styles from "../../app/page.module.css";
 import type { NavItem } from "../../lib/types";
 import { useAuth } from "./AuthProvider";
+import { getCart } from "../../lib/cart";
 
 export default function TokoNav({ links }: { links: NavItem[] }) {
     const pathname = usePathname();
@@ -13,6 +14,22 @@ export default function TokoNav({ links }: { links: NavItem[] }) {
     const loggedIn = user !== null;
 
     const [menuOpen, setMenuOpen] = useState(false);
+    const [cartCount, setCartCount] = useState(0);
+
+    useEffect(() => {
+        async function refreshCartCount() {
+            const cart = await getCart();
+            setCartCount(cart.reduce((total, item) => total + item.qty, 0));
+        }
+
+        refreshCartCount();
+        window.addEventListener("cart-updated", refreshCartCount);
+        window.addEventListener("focus", refreshCartCount);
+        return () => {
+            window.removeEventListener("cart-updated", refreshCartCount);
+            window.removeEventListener("focus", refreshCartCount);
+        };
+    }, []);
 
     useEffect(() => {
         function handleEscape(event: KeyboardEvent) {
@@ -87,6 +104,11 @@ export default function TokoNav({ links }: { links: NavItem[] }) {
                         onClick={closeMenu}
                     >
                         {item.label}
+                        {item.path === "/store/cart" && cartCount > 0 && (
+                            <span className={styles["cartBadge"]} aria-label={`${cartCount} produk di keranjang`}>
+                                {cartCount}
+                            </span>
+                        )}
                     </Link>
                 ))}
             </nav>

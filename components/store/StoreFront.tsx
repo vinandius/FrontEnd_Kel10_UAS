@@ -38,6 +38,7 @@ export default function StoreFront({ hero, navLinks, products, texts, footer, fa
       setShowWarning(true);
       return;
     }
+    window.dispatchEvent(new Event("cart-updated"));
     const pos: NotifPos = {};
     if (window.innerWidth >= 1024) {
       const r = btn.getBoundingClientRect();

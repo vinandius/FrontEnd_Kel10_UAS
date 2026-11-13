@@ -19,6 +19,7 @@ export default function CartView({ texts, fallbackImage }: CartViewProps) {
   const [products, setProducts] = useState<Product[]>([]);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [total, setTotal] = useState(0);
+  const [checkoutMessage, setCheckoutMessage] = useState("");
 
   async function refresh() {
     const [res, c] = await Promise.all([fetch("/api/products"), getCart()]);
@@ -45,8 +46,11 @@ export default function CartView({ texts, fallbackImage }: CartViewProps) {
   }
 
   async function handleCheckout() {
-    if (cart.length === 0) return alert(tx(texts, "cart.checkoutEmpty"));
-    alert(tx(texts, "cart.checkoutSuccess") + " " + formatRupiah(total));
+    if (cart.length === 0) {
+      setCheckoutMessage(tx(texts, "cart.checkoutEmpty"));
+      return;
+    }
+    setCheckoutMessage(tx(texts, "cart.checkoutSuccess") + " " + formatRupiah(total));
     await clearCart();
     await refresh();
   }
@@ -83,6 +87,12 @@ export default function CartView({ texts, fallbackImage }: CartViewProps) {
       </div>
       <p className="total">{tx(texts, "cart.total")} <strong>{formatRupiah(total)}</strong></p>
       <button className="btn-add" onClick={handleCheckout}>{tx(texts, "cart.checkout")}</button>
+      {checkoutMessage && (
+        <div className="checkout-alert" role="status">
+          <span>{checkoutMessage}</span>
+          <button type="button" onClick={() => setCheckoutMessage("")} aria-label="Tutup notifikasi">×</button>
+        </div>
+      )}
       <p className="alt"><Link href="/store">{tx(texts, "cart.continue")}</Link></p>
 
       {!user && (
