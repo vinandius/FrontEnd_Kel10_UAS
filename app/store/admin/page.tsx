@@ -18,7 +18,8 @@ export default function AdminPage() {
   const [editId, setEditId] = useState<number | null>(null);
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
-  const [tab, setTab] = useState<"produk" | "konten">("produk");
+  const [tab, setTab] = useState<"produk" | "konten" | "riwayat">("produk");
+  const [purchases, setPurchases] = useState<Purchase[]>([]);
   const { user, loading, refresh } = useAuth();
   const allowed = user?.role === "admin";
 
@@ -41,6 +42,11 @@ export default function AdminPage() {
   async function loadProducts() {
     const res = await fetch("/api/products");
     setProducts(await res.json());
+  }
+
+  async function loadPurchases() {
+    const res = await fetch("/api/admin/purchases");
+    if (res.ok) setPurchases(await res.json());
   }
   
   async function handleSubmit(e: React.FormEvent) {
@@ -111,9 +117,30 @@ export default function AdminPage() {
       <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
         <button className="btn-add" style={{ opacity: tab === "produk" ? 1 : 0.5 }} onClick={() => setTab("produk")}>Produk</button>
         <button className="btn-add" style={{ opacity: tab === "konten" ? 1 : 0.5 }} onClick={() => setTab("konten")}>Konten Situs</button>
+        <button className="btn-add" style={{ opacity: tab === "riwayat" ? 1 : 0.5 }} onClick={() => { setTab("riwayat"); loadPurchases(); }}>Riwayat Pembelian</button>
       </div>
 
       {tab === "konten" && <ContentManager />}
+
+      {tab === "riwayat" && (
+        <>
+          <h1>Riwayat Pembelian</h1>
+          {purchases.length === 0 ? <p>Belum ada pembelian.</p> : (
+            <table>
+              <thead><tr><th>ID</th><th>Pembeli</th><th>Produk</th><th>Total</th><th>Waktu</th></tr></thead>
+              <tbody>{purchases.map((purchase) => (
+                <tr key={purchase.id}>
+                  <td>#{purchase.id}</td>
+                  <td>{purchase.user.name}<br /><small>{purchase.user.email}</small></td>
+                  <td>{purchase.items.map((item) => <div key={item.id}>{item.productName} × {item.qty}</div>)}</td>
+                  <td>{formatRupiah(purchase.total)}</td>
+                  <td>{new Date(purchase.createdAt).toLocaleString("id-ID")}</td>
+                </tr>
+              ))}</tbody>
+            </table>
+          )}
+        </>
+      )}
 
       {tab === "produk" && (
         <>
@@ -167,3 +194,11 @@ export default function AdminPage() {
     </main>
   );
 }
+
+type Purchase = {
+  id: number;
+  total: number;
+  createdAt: string;
+  user: { name: string; email: string };
+  items: { id: number; productName: string; qty: number }[];
+};

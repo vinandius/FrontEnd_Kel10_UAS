@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { formatRupiah } from "../../lib/db";
 import type { Product } from "../../lib/db";
 import { tx } from "../../lib/format";
-import { getCart, setQty, removeFromCart, clearCart, getCartTotal } from "../../lib/cart";
+import { getCart, setQty, removeFromCart, getCartTotal } from "../../lib/cart";
 import type { CartItem, TextMap } from "../../lib/types";
 import SafeImg from "./SafeImg";
 import AuthWarning from "./AuthWarning";
@@ -50,8 +50,13 @@ export default function CartView({ texts, fallbackImage }: CartViewProps) {
       setCheckoutMessage(tx(texts, "cart.checkoutEmpty"));
       return;
     }
+    const res = await fetch("/api/orders", { method: "POST" });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      setCheckoutMessage(data.message ?? "Checkout gagal disimpan.");
+      return;
+    }
     setCheckoutMessage(tx(texts, "cart.checkoutSuccess") + " " + formatRupiah(total));
-    await clearCart();
     await refresh();
   }
 
