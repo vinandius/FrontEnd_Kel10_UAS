@@ -55,6 +55,42 @@ export default function TokoNav({ links }: { links: NavItem[] }) {
         setMenuOpen(false);
     }
 
+    function getNavIcon(path: string) {
+        if (path === "/store/cart") return "cart";
+        if (path.includes("login") || path.includes("register")) return "user";
+        if (path.includes("contact")) return "contact";
+        if (path === "/store" || path === "/") return "home";
+        return "list";
+    }
+
+    function StoreNavIcon({ type }: { type: string }) {
+        const common = {
+            width: 20,
+            height: 20,
+            viewBox: "0 0 24 24",
+            fill: "none",
+            stroke: "currentColor",
+            strokeWidth: 2,
+            strokeLinecap: "round" as const,
+            strokeLinejoin: "round" as const,
+            "aria-hidden": true,
+        };
+
+        if (type === "cart") {
+            return <svg {...common}><circle cx="9" cy="20" r="1" /><circle cx="19" cy="20" r="1" /><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h8.7a2 2 0 0 0 1.9-1.4L22 8H6" /></svg>;
+        }
+        if (type === "user") {
+            return <svg {...common}><circle cx="12" cy="8" r="4" /><path d="M4 21a8 8 0 0 1 16 0" /></svg>;
+        }
+        if (type === "contact") {
+            return <svg {...common}><path d="M20 15a3 3 0 0 1-3 3H9l-5 3v-6a3 3 0 0 1-1-2V7a3 3 0 0 1 3-3h11a3 3 0 0 1 3 3z" /></svg>;
+        }
+        if (type === "list") {
+            return <svg {...common}><path d="M8 6h13M8 12h13M8 18h13" /><path d="M3 6h.01M3 12h.01M3 18h.01" /></svg>;
+        }
+        return <svg {...common}><path d="m3 10 9-7 9 7" /><path d="M5 9v11h14V9" /><path d="M9 20v-6h6v6" /></svg>;
+    }
+
     return (
         <div id={styles["navigation"]}>
 
@@ -103,7 +139,10 @@ export default function TokoNav({ links }: { links: NavItem[] }) {
                         }
                         onClick={closeMenu}
                     >
-                        {item.label}
+                        <span className={styles["storeNavIcon"]}>
+                            <StoreNavIcon type={getNavIcon(item.path)} />
+                        </span>
+                        <span>{item.label}</span>
                         {item.path === "/store/cart" && cartCount > 0 && (
                             <span className={styles["cartBadge"]} aria-label={`${cartCount} produk di keranjang`}>
                                 {cartCount}

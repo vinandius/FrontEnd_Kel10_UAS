@@ -97,6 +97,9 @@
 }
 
 #navigation nav a{
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
     padding: 10px 15px;
     border: 1px solid var(--brown-light);
     border-radius: 5px;
@@ -110,6 +113,13 @@
     margin: 0;
     transition: all 0.3s ease;
     user-select: none;
+}
+
+#navigation nav a .storeNavIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
 }
 
 #navigation nav a .cartBadge {
