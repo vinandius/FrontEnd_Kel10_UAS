@@ -25,6 +25,10 @@ function rowToForm(model: ModelConfig, row: Row): FormValues {
   const form: FormValues = {};
   for (const f of model.fields) {
     const v = row[f.name];
+    if (f.type === "tags") {
+      form[f.name] = ((v as { id: number }[] | undefined) ?? []).map((t) => t.id).join(",");
+      continue;
+    }
     if (f.type === "bool") form[f.name] = Boolean(v);
     else form[f.name] = v === null || v === undefined || f.type === "upload" ? "" : String(v);
   }
@@ -46,6 +50,7 @@ export default function ContentManager() {
   const [form, setForm] = useState<FormValues>(() => emptyForm(MODELS[0]));
   const [files, setFiles] = useState<Record<string, File | null>>({});
   const [fileKey, setFileKey] = useState(0);
+  const [allTags, setAllTags] = useState<{ id: number; name: string }[]>([]);
 
   const model = MODELS.find((m) => m.key === modelKey)!;
   const rows = loaded?.key === modelKey ? loaded.rows : [];
@@ -64,6 +69,10 @@ export default function ContentManager() {
     }
     const data = await res.json();
     setLoaded({ key, rows: data.rows, options: data.options });
+    if (MODELS.find((m) => m.key === key)?.fields.some((f) => f.type === "tags")) {
+      const r = await fetch("/api/admin/content/tag");
+      if (r.ok) setAllTags((await r.json()).rows);
+    }
   }
 
   function resetForm() {
@@ -137,6 +146,23 @@ export default function ContentManager() {
 
   function renderInput(f: Field) {
     const value = form[f.name];
+
+    if (f.type === "tags") {
+      const chosen = String(value).split(",").filter(Boolean);
+      return (
+        <div>
+          {allTags.map((t) => (
+            <label key={t.id} style={{ marginRight: 10 }}>
+              <input type="checkbox" checked={chosen.includes(String(t.id))}
+                onChange={() => setValue(f.name, (chosen.includes(String(t.id))
+                  ? chosen.filter((x) => x !== String(t.id))
+                  : [...chosen, String(t.id)]).join(","))} />
+              {t.name}
+            </label>
+          ))}
+        </div>
+      );
+    }
 
     if (f.type === "bool") {
       return <input type="checkbox" checked={Boolean(value)} onChange={(e) => setValue(f.name, e.target.checked)} />;

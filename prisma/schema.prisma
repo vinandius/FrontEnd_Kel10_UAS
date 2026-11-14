@@ -9,12 +9,12 @@ datasource db {
 
 // user
 model User {
-  id       Int        @id @default(autoincrement())
-  name     String
-  email    String     @unique
-  password String
-  role     String     @default("customer")
-  cart     CartItem[]
+  id        Int        @id @default(autoincrement())
+  name      String
+  email     String     @unique
+  password  String
+  role      String     @default("customer")
+  cart      CartItem[]
   purchases Purchase[]
 }
 
@@ -145,17 +145,35 @@ model RendangType {
   image       Media   @relation(fields: [imageId], references: [id])
   position    Int
   isVisible   Boolean @default(true)
-
+  tags Tag[]
+  
   @@index([position])
 }
 
-// store
+// products adjacent
 model Product {
-  id    Int        @id @default(autoincrement())
-  name  String
-  price Int
-  img   String
-  cart  CartItem[]
+  id          Int         @id @default(autoincrement())
+  name        String
+  price       Int
+  img         String
+  cart        CartItem[]
+  categoryId  Int?
+  category    Category?   @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  tags        Tag[]
+}
+
+model Tag {
+  id            Int           @id @default(autoincrement())
+  name          String        @unique
+  rendangTypes  RendangType[]
+  products      Product[]
+}
+
+model Category {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  position  Int       @default(0)
+  products  Product[]
 }
 
 model CartItem {
@@ -182,24 +200,24 @@ model Purchase {
 }
 
 model PurchaseItem {
-  id         Int      @id @default(autoincrement())
-  purchaseId Int
-  productId  Int
+  id          Int      @id @default(autoincrement())
+  purchaseId  Int
+  productId   Int
   productName String
-  price      Int
-  qty        Int
-  purchase   Purchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+  price       Int
+  qty         Int
+  purchase    Purchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
 
   @@index([purchaseId])
 }
 
 model DailySalesSummary {
-  id              Int      @id @default(autoincrement())
-  summaryDate     DateTime @db.Date @unique
-  transactionCount Int
-  itemCount       Int
-  totalRevenue    Int
-  updatedAt       DateTime @updatedAt
+  id                Int      @id @default(autoincrement())
+  summaryDate       DateTime @db.Date @unique
+  transactionCount  Int
+  itemCount         Int
+  totalRevenue      Int
+  updatedAt         DateTime @updatedAt
 
   @@index([summaryDate])
 }

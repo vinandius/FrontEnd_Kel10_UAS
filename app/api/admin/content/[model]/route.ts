@@ -25,6 +25,8 @@ const delegates: Record<string, Delegate> = {
   sectionItem: prisma.sectionItem as unknown as Delegate,
   rendangType: prisma.rendangType as unknown as Delegate,
   media: prisma.media as unknown as Delegate,
+  category: prisma.category as unknown as Delegate,
+  tag: prisma.tag as unknown as Delegate,
 };
 
 async function checkAdmin() {
@@ -53,6 +55,14 @@ function cleanData(model: ModelConfig, body: Row, isNew: boolean): { data: Row; 
 
     if (f.type === "bool") {
       data[f.name] = Boolean(raw);
+      continue;
+    }
+
+    if (f.type === "tags") {
+      const ids = String(raw ?? "").split(",").filter(Boolean).map(Number);
+      data[f.name] = isNew
+        ? { connect: ids.map((id) => ({ id })) }
+        : { set: ids.map((id) => ({ id })) };
       continue;
     }
 

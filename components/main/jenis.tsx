@@ -32,6 +32,7 @@ export default async function Jenis() {
                         description: type.description,
                         image: type.image.url,
                         alt: type.image.alt,
+                        tags: type.tags.map((t) => t.name),
                     }))}
                 />
             </div>

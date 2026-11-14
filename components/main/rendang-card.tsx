@@ -6,6 +6,7 @@ type RendangCardProps = {
     title: string;
     image: string;
     alt: string;
+    tags: string[];
     children: ReactNode;
 };
 
@@ -14,6 +15,7 @@ export default function RendangCard({
     title,
     image,
     alt,
+    tags,
     children,
 }: RendangCardProps) {
     return (
@@ -28,6 +30,12 @@ export default function RendangCard({
                 <p>{title}</p>
 
                 <small>{children}</small>
+
+                <div className="tag-list">
+                    {tags.map((t) => (
+                        <span key={t} className="tag-chip">{t}</span>
+                    ))}
+                </div>
             </div>
         </article>
     )
