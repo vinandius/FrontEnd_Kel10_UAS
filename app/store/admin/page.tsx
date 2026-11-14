@@ -18,8 +18,9 @@ export default function AdminPage() {
   const [editId, setEditId] = useState<number | null>(null);
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
-  const [tab, setTab] = useState<"produk" | "konten" | "riwayat">("produk");
+  const [tab, setTab] = useState<"produk" | "konten" | "riwayat" | "ringkasan">("produk");
   const [purchases, setPurchases] = useState<Purchase[]>([]);
+  const [summary, setSummary] = useState<SalesSummary | null>(null);
   const { user, loading, refresh } = useAuth();
   const allowed = user?.role === "admin";
 
@@ -47,6 +48,11 @@ export default function AdminPage() {
   async function loadPurchases() {
     const res = await fetch("/api/admin/purchases");
     if (res.ok) setPurchases(await res.json());
+  }
+
+  async function loadSummary() {
+    const res = await fetch("/api/admin/sales-summary");
+    if (res.ok) setSummary(await res.json());
   }
   
   async function handleSubmit(e: React.FormEvent) {
@@ -118,6 +124,7 @@ export default function AdminPage() {
         <button className="btn-add" style={{ opacity: tab === "produk" ? 1 : 0.5 }} onClick={() => setTab("produk")}>Produk</button>
         <button className="btn-add" style={{ opacity: tab === "konten" ? 1 : 0.5 }} onClick={() => setTab("konten")}>Konten Situs</button>
         <button className="btn-add" style={{ opacity: tab === "riwayat" ? 1 : 0.5 }} onClick={() => { setTab("riwayat"); loadPurchases(); }}>Riwayat Pembelian</button>
+        <button className="btn-add" style={{ opacity: tab === "ringkasan" ? 1 : 0.5 }} onClick={() => { setTab("ringkasan"); loadSummary(); }}>Ringkasan Hari Ini</button>
       </div>
 
       {tab === "konten" && <ContentManager />}
@@ -139,6 +146,32 @@ export default function AdminPage() {
               ))}</tbody>
             </table>
           )}
+        </>
+      )}
+
+      {tab === "ringkasan" && (
+        <>
+          <h1>Ringkasan Penjualan Hari Ini</h1>
+          <button className="btn-add" onClick={loadSummary}>Perbarui Ringkasan</button>
+          {summary && <div style={{ display: "grid", gap: 12, marginTop: 20 }}>
+            <p><strong>Jumlah transaksi:</strong> {summary.transactionCount}</p>
+            <p><strong>Produk terjual:</strong> {summary.itemCount}</p>
+            <p><strong>Total penjualan:</strong> {formatRupiah(summary.totalRevenue)}</p>
+            <small>Ringkasan diperbarui: {new Date(summary.updatedAt).toLocaleString("id-ID")}</small>
+            <h2>Produk yang Terjual Hari Ini</h2>
+            {summary.products.length === 0 ? <p>Belum ada produk yang terjual hari ini.</p> : (
+              <table>
+                <thead><tr><th>Produk</th><th>Jumlah</th><th>Total Penjualan</th></tr></thead>
+                <tbody>{summary.products.map((product) => (
+                  <tr key={product.productId}>
+                    <td>{product.productName}</td>
+                    <td>{product.qty}</td>
+                    <td>{formatRupiah(product.revenue)}</td>
+                  </tr>
+                ))}</tbody>
+              </table>
+            )}
+          </div>}
         </>
       )}
 
@@ -201,4 +234,12 @@ type Purchase = {
   createdAt: string;
   user: { name: string; email: string };
   items: { id: number; productName: string; qty: number }[];
+};
+
+type SalesSummary = {
+  transactionCount: number;
+  itemCount: number;
+  totalRevenue: number;
+  updatedAt: string;
+  products: { productId: number; productName: string; qty: number; revenue: number }[];
 };

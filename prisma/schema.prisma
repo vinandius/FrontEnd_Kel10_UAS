@@ -192,3 +192,14 @@ model PurchaseItem {
 
   @@index([purchaseId])
 }
+
+model DailySalesSummary {
+  id              Int      @id @default(autoincrement())
+  summaryDate     DateTime @db.Date @unique
+  transactionCount Int
+  itemCount       Int
+  totalRevenue    Int
+  updatedAt       DateTime @updatedAt
+
+  @@index([summaryDate])
+}
