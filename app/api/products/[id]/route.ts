@@ -13,7 +13,7 @@ export async function PATCH(request: Request, { params }: Context) {
   }
 
   const id = Number((await params).id);
-  const { name, price, img } = await request.json();
+  const { name, price, img, categoryId, tagIds } = await request.json();
 
   if (price !== undefined && price !== null && price !== "") {
     const priceNum = Number(price);
@@ -25,11 +25,16 @@ export async function PATCH(request: Request, { params }: Context) {
     }
   }
 
-  const data: { name?: string; price?: number; img?: string } = {};
+  const data: {
+    name?: string; price?: number; img?: string;
+    categoryId?: number | null; tags?: { set: { id: number }[] };
+} = {};
   if (name?.trim()) data.name = name.trim();
   if (Number(price) > 0) data.price = Number(price);
   if (img) data.img = img;
-
+  if (categoryId !== undefined) data.categoryId = categoryId ? Number(categoryId) : null;
+  if (Array.isArray(tagIds)) data.tags = { set: tagIds.map((id: number) => ({ id })) };
+  
   try {
     const product = await prisma.product.update({ where: { id }, data });
     return Response.json(product);

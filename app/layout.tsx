@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Poppins, Playfair_Display } from "next/font/google";
 import "./globals.css";
+import "../styles/tags.css";
 import Navbar from "../components/layout/navbar";
 import { getNavLinks, getSiteSettings } from "../lib/content";
 

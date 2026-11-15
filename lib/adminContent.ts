@@ -1,4 +1,4 @@
-export type FieldType = "text" | "textarea" | "number" | "bool" | "select" | "relation" | "image" | "upload";
+export type FieldType = "text" | "textarea" | "number" | "bool" | "select" | "relation" | "image" | "upload" | "tags";
 
 export type Field = {
   name: string;
@@ -175,11 +175,35 @@ export const MODELS: ModelConfig[] = [
       { name: "title", label: "Nama", type: "text" },
       { name: "description", label: "Deskripsi", type: "textarea" },
       { name: "imageId", label: "Gambar", type: "image", rel: "image" },
+      { name: "tags", label: "Tag", type: "tags", rel: "tags", optional: true },
       { name: "position", label: "Urutan", type: "number" },
       { name: "isVisible", label: "Tampilkan", type: "bool" },
     ],
     columns: ["title", "imageId", "position", "isVisible"],
     order: ["position"],
+    canAdd: true,
+    canDelete: true,
+  },
+  {
+    key: "category",
+    label: "Kategori Produk",
+    desc: "Jenis barang di toko, dipakai sebagai tab filter.",
+    fields: [
+      { name: "name", label: "Nama", type: "text" },
+      { name: "position", label: "Urutan", type: "number" },
+    ],
+    columns: ["name", "position"],
+    order: ["position"],
+    canAdd: true,
+    canDelete: true,
+  },
+  {
+    key: "tag",
+    label: "Tag",
+    desc: "Label yang dipakai bersama oleh jenis rendang dan produk toko.",
+    fields: [{ name: "name", label: "Nama", type: "text" }],
+    columns: ["name"],
+    order: ["name"],
     canAdd: true,
     canDelete: true,
   },

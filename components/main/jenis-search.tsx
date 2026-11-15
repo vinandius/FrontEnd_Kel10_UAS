@@ -11,6 +11,7 @@ type JenisCard = {
     description: string;
     image: string;
     alt: string;
+    tags: string[];
 };
 
 type JenisSearchProps = {
@@ -22,7 +23,7 @@ type JenisSearchProps = {
 export default function JenisSearch({ cards, placeholder, emptyText }: JenisSearchProps) {
     const [searchTerm, setSearchTerm] = useState("");
     const filteredCards = cards.filter((item)=>{
-        const searchableText = `${item.title} ${item.description}`.toLowerCase();
+        const searchableText = `${item.title} ${item.description} ${item.tags.join(" ")}`.toLowerCase();
 
         return searchableText.includes(searchTerm.trim().toLowerCase());
     });
@@ -42,7 +43,8 @@ export default function JenisSearch({ cards, placeholder, emptyText }: JenisSear
                     number={item.number}
                     title={item.title}
                     image={item.image}
-                    alt={item.alt}>{item.description}</RendangCard>
+                    alt={item.alt}
+                    tags={item.tags}>{item.description}</RendangCard>
                 ))}
 
                 {filteredCards.length === 0 && (

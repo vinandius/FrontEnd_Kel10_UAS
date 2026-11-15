@@ -7,12 +7,15 @@ type Context = { params: Promise<{id: string }> }
 const fallback = (await getSiteSettings()).fallbackImage?.url ?? "";
 
 export async function GET() {
-  const products = await prisma.product.findMany({ orderBy: { id: "asc" } });
+  const products = await prisma.product.findMany({
+    include: { tags: true },
+    orderBy: { id: "asc" },
+  });
   return Response.json(products);
 }
 
 export async function POST(request: Request) {
-  const { name, price, img } = await request.json();
+  const { name, price, img, categoryId, tagIds } = await request.json();
 
   const session = await getSession();
 
@@ -40,8 +43,10 @@ export async function POST(request: Request) {
       name: name.trim(),
       price: Number(price),
       img: img || fallback,
+      categoryId: categoryId ? Number(categoryId) : null,
+      tags: { connect: (tagIds ?? []).map((id: number) => ({ id })) },
     },
   });
-  return Response.json(product, { status: 201 });
-
+  return Response.json(product, { status: 201 }
+  );
 }

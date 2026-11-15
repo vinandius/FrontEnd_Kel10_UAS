@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { logout } from "../../../lib/auth";
-import { formatRupiah, Product } from "../../../lib/db";
+import { formatRupiah, Product, Category, Tag } from "../../../lib/db";
 import { readImage } from "../../../lib/image";
 import SafeImg from "../../../components/store/SafeImg";
 import { useAuth } from "../../../components/store/AuthProvider";
@@ -18,6 +18,10 @@ export default function AdminPage() {
   const [editId, setEditId] = useState<number | null>(null);
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [allTags, setAllTags] = useState<Tag[]>([]);
+  const [categoryId, setCategoryId] = useState("");
+  const [tagIds, setTagIds] = useState<number[]>([]);
   const [tab, setTab] = useState<"produk" | "konten" | "riwayat" | "ringkasan">("produk");
   const [purchases, setPurchases] = useState<Purchase[]>([]);
   const [summary, setSummary] = useState<SalesSummary | null>(null);
@@ -37,12 +41,20 @@ export default function AdminPage() {
     setEditId(null);
     setName("");
     setPrice("");
+    setCategoryId("");
+    setTagIds([]);
     if (fileRef.current) fileRef.current.value = "";
   }
 
   async function loadProducts() {
     const res = await fetch("/api/products");
     setProducts(await res.json());
+    const [c, t] = await Promise.all([
+      fetch("/api/admin/content/category"),
+      fetch("/api/admin/content/tag"),
+    ]);
+    if (c.ok) setCategories((await c.json()).rows);
+    if (t.ok) setAllTags((await t.json()).rows);
   }
 
   async function loadPurchases() {
@@ -65,14 +77,17 @@ export default function AdminPage() {
 
     if (editId !== null) {
       const p = products.find((p) => p.id === editId)!;
-      if (p.name === trimmed && p.price === priceNum && !file) {
+      const sameTags = p.tags.map((t) => t.id).sort().join() === [...tagIds].sort().join();
+      const sameCategory = String(p.categoryId ?? "") === categoryId;
+      if (p.name === trimmed && p.price === priceNum && !file && sameTags && sameCategory) {
         return alert("Tidak ada perubahan.");
       }
       let pesan =
         "Simpan perubahan?\n\n" +
         "Nama: " + p.name + " -> " + trimmed + "\n" +
         "Harga: " + formatRupiah(p.price) + " -> " + formatRupiah(priceNum) +
-        (file ? "\nFoto: diganti" : "");
+        (file ? "\nFoto: diganti" : "") +
+        (!sameCategory || !sameTags ? "\nKategori/tag: diubah" : "");
       const rasio = priceNum / p.price;
       if (rasio < 0.5 || rasio > 2) {
         pesan += "\n\nPERHATIAN: harga berubah drastis. Pastikan angkanya sudah benar.";
@@ -96,7 +111,7 @@ export default function AdminPage() {
       {
         method: editId !== null ? "PATCH" : "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: trimmed, price: priceNum, img }),
+        body: JSON.stringify({ name: trimmed, price: priceNum, img, categoryId, tagIds }),
       }
     );
     if (!res.ok) return alert("Gagal menyimpan produk.");
@@ -108,6 +123,8 @@ export default function AdminPage() {
     setEditId(p.id);
     setName(p.name);
     setPrice(String(p.price));
+    setCategoryId(String(p.categoryId ?? ""));
+    setTagIds(p.tags.map((t) => t.id));
   }
 
   async function handleDelete(id: number) {
@@ -183,6 +200,19 @@ export default function AdminPage() {
               onChange={(e) => setName(e.target.value)} />
             <input type="number" placeholder="Harga (Rp)" min={0} required value={price}
               onChange={(e) => setPrice(e.target.value)} />
+            <select value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
+              <option value="">-- kategori --</option>
+              {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+            </select>
+            <div>
+              {allTags.map((t) => (
+                <label key={t.id} style={{ marginRight: 10 }}>
+                  <input type="checkbox" checked={tagIds.includes(t.id)}
+                    onChange={() => setTagIds(tagIds.includes(t.id) ? tagIds.filter((x) => x !== t.id) : [...tagIds, t.id])} />
+                  {t.name}
+                </label>
+              ))}
+            </div>
             <label className="file-label">
               Foto produk (kosongkan jika tidak ingin mengganti)
               <input type="file" accept="image/*" ref={fileRef} />
@@ -199,7 +229,7 @@ export default function AdminPage() {
 
           <table>
             <thead>
-              <tr><th>Foto</th><th>Nama</th><th>Harga</th><th>Aksi</th></tr>
+              <tr><th>Foto</th><th>Nama</th><th>Harga</th><th>Kategori</th><th>Tag</th><th>Aksi</th></tr>
             </thead>
             <tbody>
               {products.map((p) => (
@@ -207,6 +237,8 @@ export default function AdminPage() {
                   <td><SafeImg src={p.img} className="thumb" /></td>
                   <td>{p.name}</td>
                   <td>{formatRupiah(p.price)}</td>
+                  <td>{categories.find((c) => c.id === p.categoryId)?.name ?? "-"}</td>
+                  <td>{p.tags.map((t) => t.name).join(", ") || "-"}</td>
                   <td>
                     <button className="btn-add" onClick={() => handleEdit(p)}>Edit</button>
                     <button className="btn-del" onClick={() => handleDelete(p.id)}>Hapus</button>

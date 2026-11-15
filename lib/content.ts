@@ -86,11 +86,15 @@ export const getVisibleSectionKeys = cache(async (): Promise<string[]> => {
 export const getRendangTypes = cache(async () => {
   return prisma.rendangType.findMany({
     where: { isVisible: true },
-    include: { image: true },
+    include: { image: true, tags: true },
     orderBy: { position: "asc" },
   });
 });
 
 export async function getProducts(): Promise<Product[]> {
-  return prisma.product.findMany({ orderBy: { id: "asc" } });
+  return prisma.product.findMany({ include: { tags: true }, orderBy: { id: "asc" } });
 }
+
+export const getCategories = cache(async () => {
+  return prisma.category.findMany({ orderBy: { position: "asc" } });
+});
