@@ -1,0 +1,7 @@
+-- AlterTable
+ALTER TABLE "Product" ADD COLUMN     "maxStock" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "stock" INTEGER NOT NULL DEFAULT 0;
+
+-- AlterTable
+ALTER TABLE "Purchase" ADD COLUMN     "note" TEXT,
+ADD COLUMN     "status" TEXT NOT NULL DEFAULT 'PENDING';

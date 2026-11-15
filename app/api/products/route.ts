@@ -1,8 +1,6 @@
 import { prisma } from "../../../lib/prisma";
-import {getSession} from "../../../lib/session";
-import {getSiteSettings} from "../../../lib/content";
-
-type Context = { params: Promise<{id: string }> }
+import { getSession } from "../../../lib/session";
+import { getSiteSettings } from "../../../lib/content";
 
 const fallback = (await getSiteSettings()).fallbackImage?.url ?? "";
 
@@ -11,42 +9,88 @@ export async function GET() {
     include: { tags: true },
     orderBy: { id: "asc" },
   });
+
   return Response.json(products);
 }
 
 export async function POST(request: Request) {
-  const { name, price, img, categoryId, tagIds } = await request.json();
-
   const session = await getSession();
 
-  if(session?.role !== "admin") {
-    return Response.json({message: "Lu member apa gimana?"}, {status: 401});
-  }
-
-  if (!name?.trim() || !(Number(price) > 0)) {
+  if (!session || session.role !== "admin") {
     return Response.json(
-      { message: "Nama dan harga (lebih dari 0) wajib diisi." },
-      { status: 400 }
+      { message: "Akses admin diperlukan." },
+      { status: 403 }
     );
   }
 
-  const priceNum = Number(price);
-  if (!Number.isInteger(priceNum) || priceNum > 2_000_000_000) {
+  try {
+    const {
+      name,
+      price,
+      img,
+      categoryId,
+      tagIds,
+      stock,
+      maxStock,
+    } = await request.json();
+
+    const priceNum = Number(price);
+    const stockNum = Number(stock);
+    const maxStockNum = Number(maxStock);
+
+    if (!name?.trim()) {
+      return Response.json(
+        { message: "Nama produk wajib diisi." },
+        { status: 400 }
+      );
+    }
+
+    if (
+      !Number.isInteger(priceNum) ||
+      priceNum <= 0 ||
+      priceNum > 2_000_000_000
+    ) {
+      return Response.json(
+        { message: "Harga harus bilangan bulat lebih dari 0." },
+        { status: 400 }
+      );
+    }
+
+    if (
+      !Number.isInteger(stockNum) ||
+      !Number.isInteger(maxStockNum) ||
+      stockNum < 0 ||
+      maxStockNum < 0 ||
+      stockNum > maxStockNum
+    ) {
+      return Response.json(
+        { message: "Stok harus valid dan tidak boleh melebihi kapasitas maksimal." },
+        { status: 400 }
+      );
+    }
+
+    const product = await prisma.product.create({
+      data: {
+        name: name.trim(),
+        price: priceNum,
+        img: img || fallback,
+        stock: stockNum,
+        maxStock: maxStockNum,
+        categoryId: categoryId ? Number(categoryId) : null,
+        tags: {
+          connect: (tagIds ?? []).map((id: number) => ({ id })),
+        },
+      },
+      include: { tags: true },
+    });
+
+    return Response.json(product, { status: 201 });
+  } catch (error) {
+    console.error("Create product error:", error);
+
     return Response.json(
-      { message: "Max 2.000.000 ya bang :)" },
-      { status: 400 }
+      { message: "Gagal menambahkan produk." },
+      { status: 500 }
     );
   }
-
-  const product = await prisma.product.create({
-    data: {
-      name: name.trim(),
-      price: Number(price),
-      img: img || fallback,
-      categoryId: categoryId ? Number(categoryId) : null,
-      tags: { connect: (tagIds ?? []).map((id: number) => ({ id })) },
-    },
-  });
-  return Response.json(product, { status: 201 }
-  );
 }

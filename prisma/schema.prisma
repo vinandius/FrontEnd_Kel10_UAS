@@ -159,6 +159,8 @@ model Product {
   cart        CartItem[]
   categoryId  Int?
   category    Category?   @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  stock       Int @default(0)
+  maxStock    Int @default(0)
   tags        Tag[]
 }
 
@@ -194,7 +196,8 @@ model Purchase {
   createdAt DateTime        @default(now())
   user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   items     PurchaseItem[]
-
+  note      String?
+  status    String @default("PENDING")
   @@index([createdAt])
   @@index([userId, createdAt])
 }
