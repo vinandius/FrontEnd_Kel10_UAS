@@ -28,28 +28,48 @@ export default function StoreFront({ hero, navLinks, products, categories, texts
   const [notif, setNotif] = useState<NotifPos | null>(null);
   const [showWarning, setShowWarning] = useState(false);
   const [categoryId, setCategoryId] = useState<number | null>(null);
+  const [stockMessage, setStockMessage] = useState("");
 
   const list = products.filter((p) =>
     (categoryId === null || p.categoryId === categoryId) &&
     p.name.toLowerCase().includes(keyword.toLowerCase())
   );
 
-  async function handleAdd(e: React.MouseEvent<HTMLButtonElement>, id: number) {
-    const btn = e.currentTarget;
-    const ok = await addToCart(id);
-    if (!ok) {
+async function handleAdd(
+  e: React.MouseEvent<HTMLButtonElement>,
+  id: number
+) {
+  const btn = e.currentTarget;
+
+  const result = await addToCart(id);
+
+  if (!result.ok) {
+    if (result.status === 401) {
       setShowWarning(true);
-      return;
+    } else {
+      setStockMessage(
+        result.message ?? "Stok tidak mencukupi."
+      );
     }
-    window.dispatchEvent(new Event("cart-updated"));
-    const pos: NotifPos = {};
-    if (window.innerWidth >= 1024) {
-      const r = btn.getBoundingClientRect();
-      pos.left = r.right + window.scrollX + 15;
-      pos.top = r.top + window.scrollY + r.height / 2;
-    }
-    setNotif(pos);
+
+    return;
   }
+
+  setStockMessage("");
+
+  window.dispatchEvent(new Event("cart-updated"));
+
+  const pos: NotifPos = {};
+
+  if (window.innerWidth >= 1024) {
+    const r = btn.getBoundingClientRect();
+
+    pos.left = r.right + window.scrollX + 15;
+    pos.top = r.top + window.scrollY + r.height / 2;
+  }
+
+  setNotif(pos);
+}
 
   return (
     <>
@@ -79,6 +99,11 @@ export default function StoreFront({ hero, navLinks, products, categories, texts
           </div>
 
           <div className="category-tabs">
+            {stockMessage && (
+              <p className="stock-message" role="alert">
+                {stockMessage}
+              </p>
+            )}
             <button className={`category-tab${categoryId === null ? " active" : ""}`}
               onClick={() => setCategoryId(null)}>
               {tx(texts, "store.category.all")}
@@ -97,17 +122,40 @@ export default function StoreFront({ hero, navLinks, products, categories, texts
             ) : (
               list.map((p) => (
                 <div className="renlist" key={p.id}>
-                  <SafeImg src={p.img} alt={p.name} fallback={fallbackImage} />
+                  <SafeImg src={p.img} alt={p.name} fallback={fallbackImage}/>
                   <div>
                     <p>{p.name}</p>
+                
                     {p.tags.length > 0 && (
                       <div className="tag-list">
-                        {p.tags.map((t) => <span key={t.id} className="tag-chip">{t.name}</span>)}
+                        {p.tags.map((t) => (
+                          <span key={t.id} className="tag-chip">
+                            {t.name}
+                          </span>
+                        ))}
                       </div>
                     )}
+
                     <p>{formatRupiah(p.price)}</p>
-                    <button className="btn-add" onClick={(e) => handleAdd(e, p.id)}>
-                      {tx(texts, "store.addToCart")}
+
+                    {p.stock > 0 ? (
+                      <small className="product-stock">
+                        {tx(texts, "store.stock.remaining")} {p.stock}
+                      </small>
+                    ) : (
+                      <small className="product-stock stock-out">
+                        {tx(texts, "store.stock.out")}
+                      </small>
+                    )}
+
+                    <button
+                      className="btn-add"
+                      disabled={p.stock <= 0}
+                      onClick={(e) => handleAdd(e, p.id)}
+                    >
+                      {p.stock > 0
+                        ? tx(texts, "store.addToCart")
+                        : tx(texts, "store.stock.out")}
                     </button>
                   </div>
                 </div>

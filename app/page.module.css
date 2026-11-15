@@ -1339,6 +1339,343 @@
 }
 
 
+/* PRODUCT STOCK */
+.product-stock {
+    display: block;
+    margin: 6px 0 10px;
+    color: var(--green-dark);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+.product-stock.stock-out {
+    color: var(--red);
+    font-weight: 600;
+}
+
+.product-stock.stock-low {
+    color: var(--red);
+    font-weight: 600;
+}
+
+/* Pesan ketika stok tidak mencukupi */
+.stock-message {
+    margin: 12px 8px;
+    padding: 10px 12px;
+    background-color: var(--cream);
+    color: var(--red);
+    border-left: 3px solid var(--red);
+    border-radius: 5px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* Tombol ketika produk habis */
+.renlist .btn-add:disabled,
+.card .btn-add:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+    transform: none;
+    box-shadow: none;
+}
+
+
+/* CART NOTE  */
+
+.cart-note {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 8px;
+    margin-top: 24px;
+}
+
+.cart-note label {
+    display: block;
+    margin: 0;
+    color: var(--brown-dark);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.cart-note textarea {
+    display: block;
+    width: 100%;
+    min-height: 100px;
+    padding: 12px;
+    border: 1px solid var(--brown-light);
+    border-radius: 8px;
+    background-color: var(--cream-light);
+    color: var(--text);
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+.cart-note textarea:focus {
+    outline: none;
+    border-color: var(--green-dark);
+}
+
+/* Penghitung jumlah kata */
+.note-counter {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    color: var(--brown-light);
+    font-size: 11px;
+}
+
+.note-counter .stock-out {
+    color: var(--red);
+    font-weight: 600;
+}
+
+
+/* CHECKOUT MESSAGE*/
+
+.checkout-alert {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    margin-top: 15px;
+    padding: 12px;
+    border-left: 4px solid var(--green-dark);
+    border-radius: 6px;
+    background-color: var(--cream);
+    color: var(--brown-dark);
+    font-size: 13px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.checkout-alert button {
+    flex-shrink: 0;
+    padding: 0 5px;
+    border: none;
+    background: transparent;
+    color: var(--brown-dark);
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+
+/* ADMIN PRODUCT FORM */
+.admin-form:not(.content-form) {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+}
+
+.admin-form:not(.content-form) > input[type="text"],
+.admin-form:not(.content-form) > input[type="number"],
+.admin-form:not(.content-form) > select,
+.admin-form:not(.content-form) > .file-label {
+    width: 100%;
+    min-width: 0;
+    flex: none;
+}
+
+.admin-form:not(.content-form) > button {
+    width: 100%;
+}
+
+/* ADMIN PRODUCT ACTIONS */
+
+.admin-product-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.admin-product-actions button {
+    width: 100%;
+    margin: 0;
+}
+
+
+/* RESTOCK MODAL */
+
+.restock-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 16px;
+    background: rgba(0, 0, 0, 0.55);
+}
+
+.restock-modal {
+    width: 100%;
+    max-width: 420px;
+    max-height: 90vh;
+    overflow-y: auto;
+
+    padding: 20px;
+    box-sizing: border-box;
+    border-radius: 12px;
+
+    background: var(--cream-light);
+    color: var(--brown-dark);
+
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+}
+
+/* Header modal */
+
+.restock-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.restock-header h2 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.restock-close {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 32px;
+    height: 32px;
+
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--brown-dark);
+
+    font-size: 25px;
+    cursor: pointer;
+}
+
+.restock-close:hover {
+    background: rgba(0, 0, 0, 0.06);
+}
+
+.restock-product-name {
+    margin: 12px 0;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Informasi stok */
+
+.restock-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    padding: 14px;
+    margin-bottom: 18px;
+
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.restock-info div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+
+    font-size: 13px;
+}
+
+.restock-info span {
+    color: var(--brown-light);
+}
+
+.restock-info strong {
+    color: var(--brown-dark);
+}
+
+/* Form refill */
+
+.restock-modal form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.restock-modal form label {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.restock-modal form input {
+    width: 100%;
+    box-sizing: border-box;
+
+    padding: 11px;
+
+    border: 1px solid var(--brown-light);
+    border-radius: 7px;
+
+    background: var(--cream-light);
+    color: var(--brown-dark);
+
+    font-family: inherit;
+    font-size: 14px;
+}
+
+.restock-modal form input:focus {
+    outline: none;
+    border-color: var(--green-dark);
+}
+
+.restock-modal form small {
+    color: var(--brown-light);
+    font-size: 11px;
+}
+
+/* Pesan error refill */
+
+.restock-error {
+    margin: 0;
+    color: var(--red);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+/* Tombol modal */
+
+.restock-actions {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 8px;
+
+    margin-top: 10px;
+}
+
+.restock-actions button {
+    width: 100%;
+    margin: 0;
+}
+
+.restock-actions button:disabled,
+.restock-close:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+
 /*TABLET */
 @media (min-width: 768px) {
 
@@ -1526,7 +1863,75 @@
 
     .product-card > p {
         font-size: 28px;
-    }    
+    }
+
+    /* Catatan pesanan */
+    .cart-note {
+        max-width: 680px;
+    }
+
+    .note-counter {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .admin-form:not(.content-form) {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: flex-start;
+    }
+
+    .admin-form:not(.content-form) > input[type="text"] {
+        flex: 2 1 220px;
+    }
+
+    .admin-form:not(.content-form) > input[type="number"] {
+        flex: 1 1 140px;
+    }
+
+    .admin-form:not(.content-form) > select {
+        flex: 1 1 180px;
+    }
+
+    .admin-form:not(.content-form) > .file-label {
+        flex: 1 1 100%;
+    }
+
+    .admin-form:not(.content-form) > button {
+        width: auto;
+    }
+
+    .checkout-alert {
+        align-items: center;
+    }
+
+    /* Tombol aksi produk berjajar */
+
+    .admin-product-actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .admin-product-actions button {
+        width: auto;
+    }
+
+    /* Modal refill */
+
+    .restock-modal {
+        padding: 24px;
+    }
+
+    .restock-actions {
+        flex-direction: row;
+        justify-content: flex-end;
+    }
+
+    .restock-actions button {
+        width: auto;
+        min-width: 110px;
+    }
 }
 
 /* DESKTOP */
@@ -1904,6 +2309,23 @@
         border-bottom: 1.5px solid var(--green);
         transform: translateY(-50%) rotate(45deg);
         z-index: 10; 
+    }
+
+    .cart-note {
+        max-width: 760px;
+    }
+
+    .cart-note textarea {
+        min-height: 90px;
+    }
+
+     .restock-modal {
+        max-width: 450px;
+    }
+
+    .restock-info {
+        gap: 12px;
+        padding: 16px;
     }
 
     /* Animasi (Desktop) */

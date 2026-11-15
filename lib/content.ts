@@ -33,8 +33,19 @@ export const getHero = cache(async (page: string) => {
 });
 
 export const getTexts = cache(async (...groups: string[]): Promise<TextMap> => {
-  const rows = await prisma.siteText.findMany({ where: { group: { in: groups } } });
-  return Object.fromEntries(rows.map((row) => [row.key, row.value]));
+  const rows = await prisma.siteText.findMany({
+    where: {
+      group: { in: groups },
+    },
+  });
+
+  const categoryAll = rows.find(
+    (row) => row.key === "store.category.all"
+  );
+
+  return Object.fromEntries(
+    rows.map((row) => [row.key, row.value])
+  );
 });
 
 export const getFooterData = cache(async (): Promise<FooterData> => {

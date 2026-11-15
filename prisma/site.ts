@@ -86,7 +86,8 @@ const TEXTS: { group: string; key: string; value: string; description?: string }
   // Toko
   { group: "store", key: "store.list.title", value: "Jenis Rendang" },
   { group: "store", key: "store.search.placeholder", value: "Cari jenis rendang" },
-  { group: "store", key: "store.empty", value: "Rendang tidak ditemukan." },
+  {group: "store", key: "store.category.all", value: "Semua"},
+  { group: "store", key: "store.empty", value: "Produk tidak ditemukan." },
   { group: "store", key: "store.addToCart", value: "+ Keranjang" },
   { group: "store", key: "store.notif.added", value: "Berhasil ditambahkan ke keranjang!" },
   { group: "store", key: "store.auth.title", value: "Akses Ditolak" },
@@ -96,6 +97,8 @@ const TEXTS: { group: string; key: string; value: string; description?: string }
     key: "store.auth.needLoginAdd",
     value: "Silakan masuk (login) terlebih dahulu untuk menambahkan ke keranjang.",
   },
+  { group: "store", key: "store.stock.remaining", value: "Sisa stok:", },
+  { group: "store", key: "store.stock.out", value: "Stok habis", },
 
   // Keranjang
   { group: "cart", key: "cart.title", value: "Keranjang" },
@@ -106,11 +109,11 @@ const TEXTS: { group: string; key: string; value: string; description?: string }
   { group: "cart", key: "cart.continue", value: "Lanjut belanja" },
   { group: "cart", key: "cart.checkoutEmpty", value: "Keranjang masih kosong." },
   { group: "cart", key: "cart.checkoutSuccess", value: "Pesanan berhasil dibuat! Total:" },
-  {
-    group: "cart",
-    key: "cart.needLogin",
-    value: "Silakan masuk (login) terlebih dahulu untuk melihat keranjang belanja Anda.",
-  },
+  { group: "cart", key: "cart.needLogin", value: "Silakan masuk (login) terlebih dahulu untuk melihat keranjang belanja Anda.",},
+  { group: "cart", key: "cart.note.title", value: "Catatan pesanan (maksimal 20 kata)", },
+  { group: "cart", key: "cart.note.placeholder", value: "Contoh: Tolong pisahkan sambal dan rendang.",},
+  { group: "cart", key: "cart.note.limit", value: "Catatan maksimal 20 kata.",},
+
 ];
 
 export async function seedSite(prisma: PrismaClient) {
@@ -121,9 +124,26 @@ export async function seedSite(prisma: PrismaClient) {
     });
   }
 
-  if ((await prisma.siteText.count()) === 0) {
-    await prisma.siteText.createMany({ data: TEXTS });
-  }
+  await prisma.siteText.createMany({
+  data: TEXTS,
+  skipDuplicates: true,
+});
+
+
+await prisma.siteText.upsert({
+  where: {
+    key: "store.category.all",
+  },
+  update: {
+    value: "Semua",
+    group: "store",
+  },
+  create: {
+    key: "store.category.all",
+    value: "Semua",
+    group: "store",
+  },
+});
 
   if ((await prisma.navLink.count()) === 0) {
     // posisi dihitung per menu supaya urutan tiap menu mulai dari 1
