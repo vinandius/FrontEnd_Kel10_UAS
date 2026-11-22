@@ -1038,7 +1038,7 @@
     gap: 18px;
     width: 100%;
     padding: 12px;
-    background-color: var(--white);
+    background-color: var(--green);
     border-left: 3px solid var(--green-dark);
 }
 

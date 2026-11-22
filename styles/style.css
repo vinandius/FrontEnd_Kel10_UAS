@@ -36,6 +36,9 @@ body {
     padding: 0;
     font-family: 'Poppins', sans-serif;
     background-color: var(--cream);
+    background-image: url('/pattern.svg');
+    background-repeat: repeat;
+    background-size: 200px 200px;
     color: var(--text);
     overflow-x: hidden;
     user-select: none;
@@ -97,12 +100,14 @@ a{
     width: 100%;
     padding: 30px 20px 80px;
     user-select: none;
+    background: transparent;
 }   
 
 #intro {
     text-align: center;
     margin-bottom: 25px;
     user-select: none;
+    background: transparent;
 }
 
 #intro .eyebrow{
@@ -113,6 +118,7 @@ a{
     letter-spacing: 2.5px;
     text-transform: uppercase;
     user-select: none;
+    background: transparent;
 }
 
 #intro h1{
@@ -123,6 +129,7 @@ a{
     letter-spacing: 3px;
     color: var(--brown-dark);
     user-select: none;
+    background: transparent;
 }
 
 #intro > p:last-child {
@@ -912,6 +919,10 @@ a{
 }
 
 #jendang {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     width: 100%;
     max-width: 1150px;
     margin: 0 auto 10px;
@@ -983,10 +994,12 @@ a{
     display: flex;
     align-items: center;
     gap: 18px;
-    width: 100%;
-    padding: 12px;
-    background-color: var(--white);
+    width: 700px;
+    padding: 30px;
+    background-color: var(--cream-dark);
     border-left: 3px solid var(--green-dark);
+    justify-content: center;
+    border-radius: 10px;
 }
 
 .renlist img {
@@ -1673,7 +1686,7 @@ a{
     align-items: center;
     width: 100%;
     padding: 55px 20px 45px;
-    background-color: var(--cream);
+    background-color: transparent;
     text-align: center;
     }
 

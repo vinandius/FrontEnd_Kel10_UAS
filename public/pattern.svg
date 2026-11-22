@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"
+    fill="none" stroke="#5a2a14" stroke-opacity="0.08" stroke-width="1.8"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M30 40C30 22 60 15 78 28C95 40 92 65 72 75C50 85 28 70 30 40Z"/>
+    <path d="M45 42C55 36 65 46 76 42M48 58C58 54 66 60 74 56"/>
+    
+    <!-- daun -->
+    <path d="M140 140C160 120 185 130 185 160C165 175 145 165 140 140Z"/>
+    <path d="M142 143L180 158"/>
+</svg>

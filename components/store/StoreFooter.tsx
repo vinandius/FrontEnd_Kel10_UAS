@@ -19,6 +19,7 @@ export default function StoreFooter({ footer }: { footer: FooterData }) {
           </p>
         ))}
         <p>{footer.feedbackPrompt} {footer.email}</p>
+        <p style={{}}>&copy; rendangkami</p>
       </div>
     </footer>
   );

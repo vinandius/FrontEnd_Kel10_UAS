@@ -73,6 +73,7 @@ async function handleAdd(
 
   return (
     <>
+    <div>
       <TokoNav links={navLinks} />
 
       <section id="header-hero">
@@ -122,6 +123,7 @@ async function handleAdd(
             ) : (
               list.map((p) => (
                 <div className="renlist" key={p.id}>
+                  <div style={{ display: "flex", gap: 10, alignItems: "center", backgroundColor: "var(--cream)", padding: 12, width:500, borderRadius: 10 }}>
                   <SafeImg src={p.img} alt={p.name} fallback={fallbackImage}/>
                   <div>
                     <p>{p.name}</p>
@@ -138,25 +140,28 @@ async function handleAdd(
 
                     <p>{formatRupiah(p.price)}</p>
 
-                    {p.stock > 0 ? (
-                      <small className="product-stock">
-                        {tx(texts, "store.stock.remaining")} {p.stock}
-                      </small>
-                    ) : (
-                      <small className="product-stock stock-out">
-                        {tx(texts, "store.stock.out")}
-                      </small>
-                    )}
+                    <div style={{display: "flex", gap: 10, alignItems: "center"}}>
+                      {p.stock > 0 ? (
+                        <small className="product-stock">
+                          {tx(texts, "store.stock.remaining")} {p.stock}
+                        </small>
+                      ) : (
+                        <small className="product-stock stock-out">
+                          {tx(texts, "store.stock.out")}
+                        </small>
+                      )}
 
-                    <button
-                      className="btn-add"
-                      disabled={p.stock <= 0}
-                      onClick={(e) => handleAdd(e, p.id)}
-                    >
-                      {p.stock > 0
-                        ? tx(texts, "store.addToCart")
-                        : tx(texts, "store.stock.out")}
-                    </button>
+                      <button
+                        className="btn-add"
+                        disabled={p.stock <= 0}
+                        onClick={(e) => handleAdd(e, p.id)}
+                      >
+                        {p.stock > 0
+                          ? tx(texts, "store.addToCart")
+                          : tx(texts, "store.stock.out")}
+                      </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               ))
@@ -177,6 +182,7 @@ async function handleAdd(
           buttonLabel={tx(texts, "store.auth.loginButton")}
         />
       )}
+    </div>
     </>
   );
 }
