@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "../../app/page.module.css";
 import type { NavItem } from "../../lib/types";
 
@@ -11,6 +11,7 @@ export default function Navbar({ links }: { links: NavItem[] }) {
 
     const [mobileOpen, setMobileOpen] = useState(false);
     const [aboutOpen, setAboutOpen] = useState(false);
+    const navElementRef = useRef<HTMLDivElement>(null);
 
     const homeItem = links.find((item) => item.path === "/");
     const aboutLinks = links.filter((item) =>
@@ -31,11 +32,8 @@ export default function Navbar({ links }: { links: NavItem[] }) {
 
     // Menutup menu ketika klik di luar Navbar atau menekan Escape.
     useEffect(() => {
-        const navElement = document.getElementById(
-            styles["mainNavigation"]
-        );
-
         function handleOutsideClick(event: PointerEvent) {
+            const navElement = navElementRef.current;
             if (
                 navElement &&
                 event.target instanceof Node &&
@@ -76,7 +74,7 @@ export default function Navbar({ links }: { links: NavItem[] }) {
     }
 
     return (
-        <div id={styles["mainNavigation"]}>
+        <div id={styles["mainNavigation"]} ref={navElementRef}>
 
             <div className={styles["mainNavTop"]}>
                 <button

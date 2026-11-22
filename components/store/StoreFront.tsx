@@ -73,12 +73,12 @@ async function handleAdd(
 
   return (
     <>
+      <TokoNav links={navLinks} />
+
       <section id="header-hero">
         <div id="intro">
           <h1>{hero.title}</h1>
         </div>
-
-        <TokoNav links={navLinks} />
 
         <div id="hero-image">
           <img src={hero.imageUrl} alt={hero.imageAlt} className="hero-img" />

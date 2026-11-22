@@ -14,8 +14,8 @@ export default async function TokoPage() {
 
   return (
     <StoreFront
-      hero={{ title: hero.title, imageUrl: hero.image.url, imageAlt: hero.image.alt }}
       navLinks={navLinks}
+      hero={{ title: hero.title, imageUrl: hero.image.url, imageAlt: hero.image.alt }}
       products={products}
       texts={texts}
       footer={footer}
