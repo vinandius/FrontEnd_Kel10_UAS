@@ -1,6 +1,6 @@
 /* Gaya untuk halaman login, register, cart, admin. Pakai bersama style.css */
 .card {
-    max-width: 440px;
+    max-width: 1200px;
     margin: 60px auto;
     padding: 30px 35px;
     background: white;
@@ -11,7 +11,7 @@
     user-select: none;
 }
 .card.wide {
-    max-width: 760px;
+    max-width: 1200px;
     user-select: none;
 }
 
@@ -70,12 +70,11 @@
     user-select: none;
 }
 
-.btn-del {
+.card .btn-del {
     background: #b00020;
     color: white;
     border: none;
-    padding: 8px 16px;
-    border-radius: 20px;
+    margin-top: 10px;
     cursor: pointer;
     font-family: 'Poppins', sans-serif;
     user-select: none;
@@ -129,6 +128,13 @@
 }
 
 /* Admin */
+.admin-product-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
 .admin-form {
     display: flex;
     gap: 10px;
