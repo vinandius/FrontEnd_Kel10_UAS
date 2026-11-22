@@ -35,6 +35,8 @@ export default function AdminPage() {
   const [tab, setTab] = useState<"produk" | "konten" | "riwayat" | "ringkasan">("produk");
 
   const [purchases, setPurchases] = useState<Purchase[]>([]);
+  const [sortKey, setSortKey] = useState<"id" | "total" | "createdAt" | "pembeli" | "produk" | "status">("createdAt");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
   const [summary, setSummary] = useState<SalesSummary | null>(null);
 
   const { user, loading, refresh } = useAuth();
@@ -414,6 +416,35 @@ export default function AdminPage() {
     }
   }
 
+  // Mengganti kolom/arah urutan saat header tabel diklik
+  function handleSort(key: "id" | "total" | "createdAt" | "pembeli" | "produk" | "status") {
+    if (sortKey === key) {
+      setSortDir(sortDir === "asc" ? "desc" : "asc");   // klik kolom yang sama → balik arah
+    } else {
+      setSortKey(key);
+      setSortDir("asc");                                 // klik kolom baru → mulai dari naik
+    }
+  }
+
+  // Data hasil sortir, dihitung ulang tiap render berdasarkan purchases+sortKey+sortDir
+  const sortedPurchases = [...purchases].sort((a, b) => {
+    let result = 0;
+
+    if (sortKey === "id") result = a.id - b.id;
+    if (sortKey === "total") result = a.total - b.total;
+    if (sortKey === "createdAt") result = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+    if (sortKey === "pembeli") result = a.user.name.localeCompare(b.user.name);
+    if (sortKey === "produk") {
+      const totalQtyA = a.items.reduce((s, i) => s + i.qty, 0);
+      const totalQtyB = b.items.reduce((s, i) => s + i.qty, 0);
+      result = totalQtyA - totalQtyB;
+    }
+    if (sortKey === "status") {
+      result = a.status.localeCompare(b.status);
+    }
+    return sortDir === "asc" ? result : -result;
+  });
+
   const restockProduct = products.find(
     (p) => p.id === restockProductId
   ) ?? null;
@@ -476,18 +507,30 @@ export default function AdminPage() {
             <table>
               <thead>
                 <tr>
-                  <th>ID</th>
-                  <th>Pembeli</th>
-                  <th>Produk</th>
-                  <th>Total</th>
+                  <th onClick={() => handleSort("id")} style={{ cursor: "pointer" }}>
+                    ID {sortKey === "id" ? (sortDir === "asc" ? "▲" : "▼") : "⇅"}
+                  </th>
+                  <th onClick={() => handleSort("pembeli")} style={{ cursor: "pointer" }}>
+                    Pembeli {sortKey === "pembeli" ? (sortDir === "asc" ? "▲" : "▼") : "⇅"}
+                  </th>
+                  <th onClick={() => handleSort("produk")} style={{ cursor: "pointer" }}>
+                    Produk {sortKey === "produk" ? (sortDir === "asc" ? "▲" : "▼") : "⇅"}
+                  </th>
+                  <th onClick={() => handleSort("total")} style={{ cursor: "pointer" }}>
+                    Total {sortKey === "total" ? (sortDir === "asc" ? "▲" : "▼") : "⇅"}
+                  </th>
                   <th>Catatan</th>
-                  <th>Status</th>
-                  <th>Waktu</th>
+                  <th onClick={() => handleSort("status")} style={{ cursor: "pointer" }}>
+                    Status {sortKey === "status" ? (sortDir === "asc" ? "▲" : "▼") : "⇅"}
+                  </th>
+                  <th onClick={() => handleSort("createdAt")} style={{ cursor: "pointer" }}>
+                    Waktu {sortKey === "createdAt" ? (sortDir === "asc" ? "▲" : "▼") : "⇅"}
+                  </th>
                 </tr>
               </thead>
 
               <tbody>
-                {purchases.map((purchase) => (
+                {sortedPurchases.map((purchase) => (
                   <tr key={purchase.id}>
                     <td>#{purchase.id}</td>
 
