@@ -298,23 +298,33 @@ export default function AdminPage() {
   }
 
   // Membuka modal refill stok
-  function handleRestock(id: number) {
-    const product = products.find((p) => p.id === id);
+async function handleRestock(id: number) {
+  const product = products.find((p) => p.id === id);
+  if (!product) return alert("Produk tidak ditemukan.");
 
-    if (!product) {
-      return alert("Produk tidak ditemukan.");
-    }
+  const remaining = product.maxStock - product.stock;
+  if (remaining <= 0) return alert("Stok sudah mencapai kapasitas maksimal.");
 
-    const remaining = product.maxStock - product.stock;
-
-    if (remaining <= 0) {
-      return alert("Stok sudah mencapai kapasitas maksimal.");
-    }
-
-    setRestockProductId(id);
-    setRestockQuantity("");
-    setRestockError("");
+  if (!confirm(`Isi stok "${product.name}" sebanyak ${remaining} sampai penuh (${product.maxStock})?`)) {
+    return;
   }
+
+  try {
+    const res = await fetch(`/api/products/${id}/restock`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ quantity: remaining }),
+    });
+
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) return alert(data.message ?? "Gagal melakukan refill.");
+
+    alert(`Refill berhasil! Stok sekarang: ${data.product.stock}`);
+    await loadProducts();
+  } catch {
+    alert("Terjadi kesalahan saat menghubungi server.");
+  }
+}
 
   // Menutup modal refill
   function closeRestockModal() {
