@@ -413,6 +413,7 @@ export default function AdminPage() {
 
     if (selected === "ringkasan") {
       loadSummary();
+      loadPurchases();
     }
   }
 
@@ -642,6 +643,59 @@ export default function AdminPage() {
                   </tbody>
                 </table>
               )}
+              
+              <div style={{ display: "flex", gap: 24, flexWrap: "wrap", marginTop: 12 }}>
+                <div style={{ flex: "1 1 320px" }}>
+                  <h2>5 Ringkasan Penjualan terakhir</h2>
+                  {(() => {
+                    const completedPurchases = purchases.filter((p) => p.status === "COMPLETED");
+                    return completedPurchases.length === 0 ? (
+                      <p>Belum ada pembelian yang selesai.</p>
+                    ) : (
+                      <table>
+                        <thead><tr><th>ID</th><th>Pembeli</th><th>Total</th><th>Waktu</th></tr></thead>
+                        <tbody>
+                          {completedPurchases.slice(0, 5).map((p) => (
+                            <tr key={p.id}>
+                              <td>#{p.id}</td>
+                              <td>{p.user.name}</td>
+                              <td>{formatRupiah(p.total)}</td>
+                              <td>{new Date(p.createdAt).toLocaleString("id-ID")}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    );
+                  })()}
+                </div>
+
+                {/* KANAN: ringkasan produk per kategori */}
+                <div style={{ flex: "1 1 280px" }}>
+                  <h2>Ringkasan Produk per Kategori</h2>
+                  {categories.map((cat) => {
+                    const catProducts = products.filter((p) => p.categoryId === cat.id);
+                    return (
+                      <div key={cat.id} style={{ marginBottom: 16 }}>
+                        <h3>{cat.name} ({catProducts.length})</h3>
+                        <ul>
+                          {catProducts.map((p) => (
+                            <li key={p.id}>{p.name} — Stok: {p.stock}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    );
+                  })}
+
+                  {products.filter((p) => !p.categoryId).length > 0 && (
+                    <div>
+                      <h3>Tanpa kategori</h3>
+                      <ul>
+                        {products.filter((p) => !p.categoryId).map((p) => <li key={p.id}>{p.name}</li>)}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           )}
         </>
