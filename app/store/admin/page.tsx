@@ -1,4 +1,4 @@
- "use client";
+"use client";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -453,46 +453,35 @@ export default function AdminPage() {
   if (!allowed) return null;
 
   return (
-    <main className="card wide">
+    <div className="admin-layout">
+      <aside className="admin-sidebar">
+        <nav className="admin-side-nav">
+          
+          {([
+            ["produk", "Produk"],
+            ["konten", "Konten Situs"],
+            ["riwayat", "Riwayat Pembelian"],
+            ["ringkasan", "Ringkasan Hari Ini"],
+          ] as const).map(([key, label]) => (
+            <button key={key} type="button" className={`btn-add admin-side-btn${tab === key ? " active" : ""}`} onClick={() => changeTab(key)}>
+            {label}
+            </button>
+          ))}
+        </nav>
 
-      {/* Navigasi tab admin */}
-      <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
-        <button
-          type="button"
-          className="btn-add"
-          style={{ opacity: tab === "produk" ? 1 : 0.5 }}
-          onClick={() => changeTab("produk")}
-        >
-          Produk
-        </button>
-
-        <button
-          type="button"
-          className="btn-add"
-          style={{ opacity: tab === "konten" ? 1 : 0.5 }}
-          onClick={() => changeTab("konten")}
-        >
-          Konten Situs
-        </button>
-
-        <button
-          type="button"
-          className="btn-add"
-          style={{ opacity: tab === "riwayat" ? 1 : 0.5 }}
-          onClick={() => changeTab("riwayat")}
-        >
-          Riwayat Pembelian
-        </button>
-
-        <button
-          type="button"
-          className="btn-add"
-          style={{ opacity: tab === "ringkasan" ? 1 : 0.5 }}
-          onClick={() => changeTab("ringkasan")}
-        >
-          Ringkasan Hari Ini
-        </button>
-      </div>
+        <div className="admin-side-footer">
+          <Link href="/store" className="admin-side-link">
+            Kembali ke toko
+          </Link>
+          <button
+            type="button"
+            className="admin-side-logout"
+            onClick={async () => { await logout(); await refresh(); router.push("/store/login"); }}>
+            Keluar (log out)
+          </button>
+        </div>
+      </aside>
+      <main className="card wide admin-content">
 
       {/* TAB KONTEN SITUS */}
       {tab === "konten" && <ContentManager />}
@@ -990,23 +979,8 @@ export default function AdminPage() {
         </div>
       )}
 
-      {/* Link kembali dan logout */}
-      <p className="alt">
-        <Link href="/store">Kembali ke toko</Link> |{" "}
-        <a
-          href="#"
-          onClick={async (e) => {
-            e.preventDefault();
-            await logout();
-            await refresh();
-            router.push("/store/login");
-          }}
-        >
-          Keluar (log out)
-        </a>
-      </p>
-
     </main>
+    </div>
   );
 }
 
