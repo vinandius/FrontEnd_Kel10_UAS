@@ -142,19 +142,6 @@
     margin: 8px 0;
 }
 
-.receipt button {
-    background-color: var(--green);
-    margin-top: 15px;
-    padding: 10px 20px;
-    cursor: pointer;
-    font-family: 'Poppins', sans-serif;
-
-}
-.receipt button:hover {
-    background-color: var(--green);
-    border-color: var(--cream);
-    color: var(--cream);
-}
 
 @media print {
     body * {

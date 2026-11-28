@@ -275,7 +275,7 @@ export default function CartView({
               Total: {formatRupiah(receipt.total)}
           </h3>
 
-          <button onClick={() => setReceipt(null)}>
+          <button type="button" className="btn-add" onClick={() => setReceipt(null)}>
               Tutup
           </button>
       </div>
