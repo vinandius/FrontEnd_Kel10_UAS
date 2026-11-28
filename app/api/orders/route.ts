@@ -87,6 +87,9 @@ export async function POST(request: Request) {
               })),
             },
           },
+            include: {
+              items: true,
+            },
         });
 
         await tx.cartItem.deleteMany({
@@ -100,6 +103,8 @@ export async function POST(request: Request) {
     return Response.json({
       ok: true,
       id: purchase.id,
+      total: purchase.total,
+      items: purchase.items,
     });
   } catch (error) {
     const message =

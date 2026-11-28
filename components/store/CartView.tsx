@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable react-hooks/set-state-in-effect, @typescript-eslint/no-explicit-any */
 "use client";
 
 import Link from "next/link";
@@ -41,7 +42,7 @@ export default function CartView({
   const [total, setTotal] = useState(0);
   const [checkoutMessage, setCheckoutMessage] = useState("");
   const [note, setNote] = useState("");
-
+  const [receipt, setReceipt] = useState<any>(null);
   const noteWords = countWords(note);
   const noteTooLong = noteWords > 20;
 
@@ -126,13 +127,10 @@ export default function CartView({
       return;
     }
 
-    setCheckoutMessage(
-      tx(texts, "cart.checkoutSuccess") +
-      " " +
-      formatRupiah(total)
-    );
-
+    const data = await res.json();
+    setReceipt(data);
     setNote("");
+    setCheckoutMessage("");
     await refresh();
 
     window.dispatchEvent(new Event("cart-updated"));
@@ -253,6 +251,35 @@ export default function CartView({
           </button>
         </div>
       )}
+      
+      {/* Receipt */}
+      {receipt && (
+        <div className="receipt">
+          <h2>Receipt Pesanan</h2>
+
+          <p>Nomor pesanan: #{receipt.id}</p>
+
+          <hr />
+
+          {receipt.items.map((item: any, index: number) => (
+              <p key={index}>
+                  {item.productName} × {item.qty}
+                  {" — "}
+                  {formatRupiah(item.price * item.qty)}
+              </p>
+          ))}
+
+          <hr />
+
+          <h3>
+              Total: {formatRupiah(receipt.total)}
+          </h3>
+
+          <button onClick={() => setReceipt(null)}>
+              Tutup
+          </button>
+      </div>
+    )}
 
       <p className="alt">
         <Link href="/store">

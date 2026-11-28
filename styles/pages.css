@@ -126,6 +126,58 @@
     text-align: right;
     user-select: none;
 }
+.receipt {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px dashed var(--brown-dark);
+    border-radius: 8px;
+}
+
+.receipt h2 {
+    margin-bottom: 15px;
+}
+
+.receipt p {
+    font-family: 'Poppins', sans-serif;
+    margin: 8px 0;
+}
+
+.receipt button {
+    background-color: var(--green);
+    margin-top: 15px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+
+}
+.receipt button:hover {
+    background-color: var(--green);
+    border-color: var(--cream);
+    color: var(--cream);
+}
+
+@media print {
+    body * {
+        visibility: hidden;
+    }
+
+    .receipt, .receipt * {
+        visibility: visible;
+    }
+
+    .receipt {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 20px;
+        border: 1px dashed var(--brown-dark);
+    }
+
+    .receipt button {
+        display: none;
+    }
+}
 
 /* Admin */
 .admin-product-actions {
